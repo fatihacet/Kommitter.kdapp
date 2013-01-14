@@ -1,0 +1,18 @@
+.kommitter-app {
+  margin: -5px;
+  padding: 10px;
+}
+.kommitter-branch-name,
+.kommitter-file-item {
+  height: 25px;
+}
+.kommitter-icon {
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+.kommitter-icon-deleted   { background: red;  }
+.kommitter-icon-untracked { background: gray; }
+.kommitter-icon-modified  { background: blue; }
+.kommitter-icon-added     { background: green; }
