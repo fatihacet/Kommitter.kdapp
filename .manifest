@@ -1,0 +1,33 @@
+{
+  "devMode": true,
+  "version": "0.1",
+  "name": "Kommitter",
+  "identifier": "com.koding.apps.kommitter",
+  "path": "~/Applications/Kommitter.kdapp",
+  "homepage": "fatihacet.koding.com/kommitter",
+  "author": "Fatih Acet",
+  "repository": "git://github.com/fatihacet/Kommitter.kdapp.git",
+  "description": "Kommitter : a Koding application created with the blank template.",
+  "category": "web-app",
+  "source": {
+    "blocks": {
+      "app": {
+        "files": [
+          "./app/FileItem.coffee",
+          "./app/Kommitter.coffee",
+          "./app/BaseView.coffee",
+          "./index.coffee"
+        ]
+      }
+    },
+    "stylesheets": [
+      "./resources/style.css"
+    ]
+  },
+  "options": {
+    "type": "tab"
+  },
+  "icns": {
+    "128": "./resources/icon.128.png"
+  }
+}
