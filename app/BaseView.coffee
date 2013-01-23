@@ -72,7 +72,7 @@ class BaseView extends JView
       views       : [ @leftView, @rightView ]
     
     
-    @kommitter = new Kommitter "GitHub/geneJS/", @ # TODO: Passing @ as an argument ?
+    @kommitter = new Kommitter "Applications/Kommitter.kdapp", @ # TODO: Passing @ as an argument ?
     
     
     @on "status", (res) =>
@@ -94,6 +94,11 @@ class BaseView extends JView
     
     @on "diff", (path) =>
       @kommitter.emit "diff", path
+      
+    
+    @on "kommitted", =>
+      @stagedFilesView.destroySubViews()
+      @kommitMessageTextarea.setValue ""
       
   
   updateBranchName: (branchName) ->
