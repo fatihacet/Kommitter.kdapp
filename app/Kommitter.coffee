@@ -42,7 +42,7 @@ class Kommitter extends KDObject
         
         
     @on "commit", (message) =>
-      commitedFiles = @staged.join ''
+      commitedFiles = @staged.join ' '
       commitText    = "git commit -m #{message} #{commitedFiles}"
       
       @doKiteRequest "cd #{@repoPath} ; #{commitText}", (res) =>
@@ -52,6 +52,8 @@ class Kommitter extends KDObject
           title    : res.split('\n')[1]
           duration : 5000
         
+        @delegate.emit "kommitted"
+      
     
     @on "push", =>
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
