@@ -34,6 +34,12 @@ class BaseView extends JView
       title    : "Push"
       callback : =>
         @push()
+        
+    
+    buttonsView.addSubView @refreshButton = new KDButtonView
+      title    : "Refresh"
+      callback : =>
+        @refresh()
       
     
     @kommitMessageTextarea = new KDInputView
@@ -133,6 +139,12 @@ class BaseView extends JView
   
   push: ->
     @kommitter.emit "push"
+    
+    
+  refresh: ->
+    @workingDirView.destroySubViews()
+    @stagedFilesView.destroySubViews()
+    @kommitter.emit "refresh"
     
     
   updateWorkingDir: (files) =>
