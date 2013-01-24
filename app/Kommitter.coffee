@@ -4,12 +4,10 @@ class Kommitter extends KDObject
     
     super 
     
-    @delegate    = parent
-    @repoPath    = repoPath
-      
-    
-    @staged = [];
+    @delegate  = parent
+    @repoPath  = repoPath
     @statusObj = @getNewStatusObj()
+    @staged    = [];
     
     
     @on "stage", (item) =>
@@ -17,14 +15,17 @@ class Kommitter extends KDObject
       
       
     @on "unstage", (item) =>
-      arr    = @staged
-      target = item.getOptions().path
-      i      = 0
-      len    = arr.length
-      
-      while i < len
-        arr.splice i, 1  if arr[i] is target
-        i++
+      # arr    = @staged
+      # target = item.getOptions().path
+      # i      = 0
+      # len    = arr.length
+      # 
+      # while i < len
+      #   arr.splice i, 1  if arr[i] is target
+      #   i++
+      # 
+      debugger
+      # console.log @staged
       
     
     @on "diff", (path) =>
@@ -59,6 +60,7 @@ class Kommitter extends KDObject
     
     @on "push", =>
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
+        # handle response
         
         
     @on "refresh", =>
@@ -84,7 +86,7 @@ class Kommitter extends KDObject
       @getDelegate().emit "status", @statusObj
       
   
-  statusKeys: 
+  statusKeys  : 
     branch    : "* "
     modified  : " M"
     added     : "A "
@@ -109,7 +111,8 @@ class Kommitter extends KDObject
         callback(res) if callback
       else 
         new KDNotificationView
-          title    : "An error occured while processing your request, try again please!",
+          title    : "An error occured while processing your request, please try again!",
           type     : "mini"
+          cssClass : "error"
           duration : 3000
   
