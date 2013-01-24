@@ -78,19 +78,20 @@ class BaseView extends JView
       views       : [ @leftView, @rightView ]
     
     
-    @kommitter = new Kommitter "Applications/Kommitter.kdapp", @ # TODO: Passing @ as an argument ?
+    # @kommitter = new Kommitter "Applications/Kommitter.kdapp", @ # TODO: Passing @ as an argument ?
+    @kommitter = new Kommitter "GitHub/geneJS", @ # TODO: Passing @ as an argument ?
     
     
     @on "status", (res) =>
       @updateBranchName res.branch[0]
-      delete res.branch # TODO: Remove that line
+      delete res.branch
       @updateWorkingDir res
-      
+    
     
     @on "updateStatus", (res) =>
       @removeLeftPanelSubViews()
       @updateWorkingDir res
-  
+    
     
     @on "stageOrUnstage", (item) =>
       eventName = if item.getStagedStatus() then "stage" else "unstage"
@@ -106,11 +107,11 @@ class BaseView extends JView
       @stagedFilesView.destroySubViews()
       @kommitMessageTextarea.setValue ""
 
-        
+
   updateBranchName: (branchName) ->
-    @branchName.updatePartial "Current branch: #{branchName}"   
-  
-  
+    @branchName.updatePartial "Current branch: #{branchName}"
+    
+    
   stage: (item) ->
     @workingDirView.removeSubView item
     initialType = item.getOptions().type
@@ -121,8 +122,8 @@ class BaseView extends JView
       oldType  : initialType
       
     @stagedFilesView.addSubView newItem
-  
-  
+    
+    
   unstage: (item) ->
     @stagedFilesView.removeSubView item
     newItem = new FileItem
@@ -132,7 +133,7 @@ class BaseView extends JView
       
     @workingDirView.addSubView newItem
     
-  
+    
   commit: ->
     if @kommitMessageTextarea.getValue() isnt ""
       @kommitter.emit "commit", FSHelper.escapeFilePath @kommitMessageTextarea.getValue()
@@ -164,8 +165,8 @@ class BaseView extends JView
             
           target =  if fileList == "added" then @stagedFilesView else @workingDirView
           target.addSubView item
-        
-  
+    
+    
   pistachio: -> """
     {{> @branchName }}
     {{> @baseView }}
