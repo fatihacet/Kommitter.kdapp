@@ -105,8 +105,8 @@ class BaseView extends JView
     @on "kommitted", =>
       @stagedFilesView.destroySubViews()
       @kommitMessageTextarea.setValue ""
-      
-  
+
+        
   updateBranchName: (branchName) ->
     @branchName.updatePartial "Current branch: #{branchName}"   
   
