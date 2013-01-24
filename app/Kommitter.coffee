@@ -42,7 +42,14 @@ class Kommitter extends KDObject
         
         
     @on "commit", (message) =>
-      commitedFiles = @staged.join ' '
+      commitedFiles = @staged.join " "
+      if commitedFiles.length is 0
+        new KDNotificationView
+          title    : "No file staged to commit!"
+          cssClass : "error"
+          type     : "mini"
+        return no
+      
       commitText    = "git commit -m #{message} #{commitedFiles}"
       
       @doKiteRequest "cd #{@repoPath} ; #{commitText}", (res) =>
