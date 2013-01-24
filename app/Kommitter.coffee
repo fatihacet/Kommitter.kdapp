@@ -15,19 +15,9 @@ class Kommitter extends KDObject
       
       
     @on "unstage", (item) =>
-      # arr    = @staged
-      # target = item.getOptions().path
-      # i      = 0
-      # len    = arr.length
-      # 
-      # while i < len
-      #   arr.splice i, 1  if arr[i] is target
-      #   i++
-      # 
-      debugger
-      # console.log @staged
+      @staged.splice @staged.indexOf(item.getOptions().path), 1
       
-    
+      
     @on "diff", (path) =>
       @doKiteRequest "cd #{@repoPath} ; git diff #{path}", (res) =>
         @aceEditor = @delegate.ace.edit @delegate.diffView.domElement[0]
