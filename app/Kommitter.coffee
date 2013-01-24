@@ -50,8 +50,8 @@ class Kommitter extends KDObject
       @doKiteRequest "cd #{@repoPath} ; #{commitText}", (res) =>
         # TODO: Error check
         new KDNotificationView
-          type     : 'mini'
-          title    : res.split('\n')[1]
+          type     : "mini"
+          title    : res.split("\n")[1]
           duration : 5000
         
         @delegate.emit "kommitted"
