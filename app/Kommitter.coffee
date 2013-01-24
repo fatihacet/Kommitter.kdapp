@@ -6,15 +6,10 @@ class Kommitter extends KDObject
     
     @delegate    = parent
     @repoPath    = repoPath
-    @statusObj   = 
-      branch     : []
-      modified   : []
-      added      : []
-      deleted    : []
-      untracked  : []
       
     
     @staged = [];
+    @statusObj = @getNewStatusObj()
     
     
     @on "stage", (item) =>
@@ -68,6 +63,14 @@ class Kommitter extends KDObject
     
     @getStatus()
   
+  
+  getNewStatusObj : ->
+    branch        : []
+    modified      : []
+    added         : []
+    deleted       : []
+    untracked     : []
+    
   
   getStatus: (repoPath) =>
     @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath} ; git branch ; git status -s", (res) =>
