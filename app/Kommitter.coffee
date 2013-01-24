@@ -60,6 +60,12 @@ class Kommitter extends KDObject
     @on "push", =>
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
         
+        
+    @on "refresh", =>
+      @statusObj = @getNewStatusObj()
+      @aceEditor?.getSession().setValue ""
+      @getStatus()
+        
     
     @getStatus()
   
