@@ -134,9 +134,15 @@ class BaseView extends JView
     
   
   commit: ->
-    @kommitter.emit "commit", FSHelper.escapeFilePath @kommitMessageTextarea.getValue()
-  
-  
+    if @kommitMessageTextarea.getValue() isnt ""
+      @kommitter.emit "commit", FSHelper.escapeFilePath @kommitMessageTextarea.getValue()
+    else 
+      new KDNotificationView
+        title    : "Commit message cannot be empty."
+        cssClass : "error"
+        type     : "mini"
+    
+    
   push: ->
     @kommitter.emit "push"
     
