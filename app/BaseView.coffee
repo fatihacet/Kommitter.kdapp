@@ -1,58 +1,48 @@
-KD.enableLogs(); #TODO: Remove line
-
 class BaseView extends JView
-  constructor: (options = {}) ->
-    @ace = options.ace
+
+  constructor: (options = {}, data) ->
+    
+    @ace             = options.ace
     options.cssClass = "kommitter-app"
     
-    super options
+    super options, data
     
-    @branchName = new KDView
+    @reposView = new ReposView
+      delegate : @
+    
+    @container = new KDView
+      cssClass : "kommitter-base-container"
+    
+    @container.addSubView @branchName = new KDView
       cssClass : "kommitter-branch-name"
       partial  : "Current branch: ... "
       
-      
     @workingDirView = new KDView
-      
       
     @stagedFilesView = new KDView
       
-      
     @diffView = new KDView
-      
     
-    buttonsView = new KDView
+    @kommitView = new KDView
     
-    
-    buttonsView.addSubView @commitButton = new KDButtonView
-      title    : "Commit"
-      callback : =>
-        @commit()
-    
-    
-    buttonsView.addSubView @pushButton = new KDButtonView
-      title    : "Push"
-      callback : =>
-        @push()
-        
+    @kommitView.addSubView buttonsView = new KDView
+      cssClass : "kommitter-buttons-view"
     
     buttonsView.addSubView @refreshButton = new KDButtonView
       title    : "Refresh"
-      callback : =>
-        @refresh()
-      
+      callback : => @refresh()
     
-    @kommitMessageTextarea = new KDInputView
+    buttonsView.addSubView @commitButton = new KDButtonView
+      title    : "Commit"
+      callback : => @commit()
+    
+    buttonsView.addSubView @pushButton = new KDButtonView
+      title    : "Push"
+      callback : => @push()
+    
+    @kommitView.addSubView @kommitMessageTextarea = new KDInputView
       type        : "textarea"
       placeholder : "Commit message"
-    
-    
-    @kommitView = new KDSplitView
-      type        : "vertical"
-      resizable   : no
-      sizes       : [ 100, null ]
-      views       : [ buttonsView, @kommitMessageTextarea ]
-      
       
     @leftView = new KDSplitView
       cssClass    : "left-view"
@@ -61,7 +51,6 @@ class BaseView extends JView
       sizes       : [ "75%", null ]
       views       : [ @workingDirView, @stagedFilesView ]
       
-      
     @rightView = new KDSplitView
       cssClass    : "left-view"
       type        : "horizontal"
@@ -69,48 +58,45 @@ class BaseView extends JView
       sizes       : [ "75%", null ]
       views       : [ @diffView, @kommitView ]
       
-      
-    @baseView = new KDSplitView
+    @container.addSubView @baseView = new KDSplitView
       cssClass    : "base-view"
       type        : "vertical"
       resizable   : yes
       sizes       : [ "25%", null ]
       views       : [ @leftView, @rightView ]
     
-    
-    # @kommitter = new Kommitter "Applications/Kommitter.kdapp", @ # TODO: Passing @ as an argument ?
-    @kommitter = new Kommitter "GitHub/geneJS", @ # TODO: Passing @ as an argument ?
-    
-    
     @on "status", (res) =>
       @updateBranchName res.branch[0]
       delete res.branch
       @updateWorkingDir res
     
-    
     @on "updateStatus", (res) =>
       @removeLeftPanelSubViews()
       @updateWorkingDir res
-    
     
     @on "stageOrUnstage", (item) =>
       eventName = if item.getStagedStatus() then "stage" else "unstage"
       @[eventName] item
       @kommitter.emit eventName, item
     
-    
     @on "diff", (path) =>
       @kommitter.emit "diff", path
-      
     
     @on "kommitted", =>
       @stagedFilesView.destroySubViews()
       @kommitMessageTextarea.setValue ""
-
+      
+  initialize: ->
+    @kommitter = new Kommitter
+      delegate: @
+    , @getData()
+    
+    height = @getHeight()
+    @reposView.$().css "top", -height
+    @container.$().css "top", -height
 
   updateBranchName: (branchName) ->
     @branchName.updatePartial "Current branch: #{branchName}"
-    
     
   stage: (item) ->
     @workingDirView.removeSubView item
@@ -123,7 +109,6 @@ class BaseView extends JView
       
     @stagedFilesView.addSubView newItem
     
-    
   unstage: (item) ->
     @stagedFilesView.removeSubView item
     newItem = new FileItem
@@ -132,7 +117,6 @@ class BaseView extends JView
       type     : item.getOptions().oldType
       
     @workingDirView.addSubView newItem
-    
     
   commit: ->
     if @kommitMessageTextarea.getValue() isnt ""
@@ -143,16 +127,13 @@ class BaseView extends JView
         cssClass : "error"
         type     : "mini"
     
-    
   push: ->
     @kommitter.emit "push"
-    
     
   refresh: ->
     @workingDirView.destroySubViews()
     @stagedFilesView.destroySubViews()
     @kommitter.emit "refresh"
-    
     
   updateWorkingDir: (files) =>
     for fileList of files
@@ -166,8 +147,7 @@ class BaseView extends JView
           target =  if fileList == "added" then @stagedFilesView else @workingDirView
           target.addSubView item
     
-    
   pistachio: -> """
-    {{> @branchName }}
-    {{> @baseView }}
+    {{> @reposView}}
+    {{> @container }}
   """ 

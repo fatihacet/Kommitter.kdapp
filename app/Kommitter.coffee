@@ -1,22 +1,18 @@
 class Kommitter extends KDObject
   
-  constructor: (repoPath, parent) ->
+  constructor: (options, data) ->
     
-    super 
+    super options, data
     
-    @delegate  = parent
-    @repoPath  = repoPath
+    @repoPath  = @getData()
     @statusObj = @getNewStatusObj()
-    @staged    = [];
-    
+    @staged    = []
     
     @on "stage", (item) =>
       @staged.push item.getOptions().path
       
-      
     @on "unstage", (item) =>
       @staged.splice @staged.indexOf(item.getOptions().path), 1
-      
       
     @on "diff", (path) =>
       @doKiteRequest "cd #{@repoPath} ; git diff #{path}", (res) =>
@@ -25,7 +21,6 @@ class Kommitter extends KDObject
         @aceEditor.getSession().setMode "ace/mode/diff"
         @aceEditor.setReadOnly true
         @aceEditor.getSession().setValue res
-        
         
     @on "commit", (message) =>
       commitedFiles = @staged.join " "
@@ -47,20 +42,16 @@ class Kommitter extends KDObject
         
         @delegate.emit "kommitted"
       
-    
     @on "push", =>
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
         # handle response
-        
         
     @on "refresh", =>
       @statusObj = @getNewStatusObj()
       @aceEditor?.getSession().setValue ""
       @getStatus()
         
-    
     @getStatus()
-  
   
   getNewStatusObj : ->
     branch        : []
@@ -69,20 +60,17 @@ class Kommitter extends KDObject
     deleted       : []
     untracked     : []
     
-  
   getStatus: (repoPath) =>
     @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath} ; git branch ; git status -s", (res) =>
       @parseOutput res
       @getDelegate().emit "status", @statusObj
       
-  
   statusKeys  : 
     branch    : "* "
     modified  : " M"
     added     : "A "
     deleted   : " D"
     untracked : "??"
-  
   
   parseOutput: (res) ->
     results = res.split "\n"
@@ -94,7 +82,6 @@ class Kommitter extends KDObject
         if result.indexOf(currentKey) is 0
           @statusObj[key].push result.split(currentKey)[1]
 
-  
   doKiteRequest: (command, callback) ->
     KD.getSingleton('kiteController').run command, (err, res) =>
       unless err
