@@ -1,8 +1,89 @@
-// Compiled by Koding Servers at Sun Jan 13 2013 23:17:36 GMT-0800 (PST) in server time
+// Compiled by Koding Servers at Wed Apr 03 2013 00:57:20 GMT-0700 (PDT) in server time
 
 (function() {
 
 /* KDAPP STARTS */
+
+/* BLOCK STARTS /Source: /Users/fatihacet/Applications/Kommitter.kdapp/app/ReposView.coffee */
+
+var RepoItem, ReposView, nickname,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+KD.enableLogs();
+
+nickname = KD.whoami().profile.nickname;
+
+ReposView = (function(_super) {
+
+  __extends(ReposView, _super);
+
+  function ReposView(options, data) {
+    if (options == null) {
+      options = {};
+    }
+    options.cssClass = "kommitter-repos-view";
+    ReposView.__super__.constructor.call(this, options, data);
+    this.findReposAndCreateRepoItems();
+  }
+
+  ReposView.prototype.findReposAndCreateRepoItems = function() {
+    var _this = this;
+    return KD.getSingleton("kiteController").run("find -P \"/Users/" + nickname + "/Applications/\" -maxdepth 4 -name \".git\" -type d", function(err, res) {
+      var line, lines, _i, _len, _results;
+      lines = res.split("\n");
+      _results = [];
+      for (_i = 0, _len = lines.length; _i < _len; _i++) {
+        line = lines[_i];
+        if (line) {
+          _results.push(_this.addSubView(new RepoItem({
+            delegate: _this.getDelegate()
+          }, line.replace(".git", ""))));
+        }
+      }
+      return _results;
+    });
+  };
+
+  return ReposView;
+
+})(JView);
+
+RepoItem = (function(_super) {
+
+  __extends(RepoItem, _super);
+
+  function RepoItem(options, data) {
+    if (options == null) {
+      options = {};
+    }
+    options.cssClass = "kommitter-repo-item";
+    RepoItem.__super__.constructor.call(this, options, data);
+  }
+
+  RepoItem.prototype.click = function() {
+    var baseView;
+    baseView = this.getDelegate();
+    baseView.setData(this.getData());
+    return baseView.initialize();
+  };
+
+  RepoItem.prototype.pistachio = function() {
+    var data, name, words;
+    data = this.getData();
+    words = data.split("/");
+    name = words[words.length - 2];
+    return "<img class=\"kommitter-repo-icon\" src=\"https://app.koding.com/gokmen/Sample/0.1.1/resources/icon.128.png\" />\n<span class=\"kommitter-repo-name\">" + name + "</span>\n<span class=\"kommitter-repo-path\">" + data + "</span>";
+  };
+
+  return RepoItem;
+
+})(JView);
+
+
+/* BLOCK ENDS */
+
+
 
 /* BLOCK STARTS /Source: /Users/fatihacet/Applications/Kommitter.kdapp/app/FileItem.coffee */
 
@@ -69,38 +150,19 @@ Kommitter = (function(_super) {
 
   __extends(Kommitter, _super);
 
-  function Kommitter(repoPath, parent) {
+  function Kommitter(options, data) {
     this.getStatus = __bind(this.getStatus, this);
 
     var _this = this;
-    Kommitter.__super__.constructor.apply(this, arguments);
-    this.delegate = parent;
-    this.repoPath = repoPath;
-    this.statusObj = {
-      branch: [],
-      modified: [],
-      added: [],
-      deleted: [],
-      untracked: []
-    };
+    Kommitter.__super__.constructor.call(this, options, data);
+    this.repoPath = this.getData();
+    this.statusObj = this.getNewStatusObj();
     this.staged = [];
     this.on("stage", function(item) {
       return _this.staged.push(item.getOptions().path);
     });
     this.on("unstage", function(item) {
-      var arr, i, len, target, _results;
-      arr = _this.staged;
-      target = item.getOptions().path;
-      i = 0;
-      len = arr.length;
-      _results = [];
-      while (i < len) {
-        if (arr[i] === target) {
-          arr.splice(i, 1);
-        }
-        _results.push(i++);
-      }
-      return _results;
+      return _this.staged.splice(_this.staged.indexOf(item.getOptions().path), 1);
     });
     this.on("diff", function(path) {
       return _this.doKiteRequest("cd " + _this.repoPath + " ; git diff " + path, function(res) {
@@ -113,21 +175,48 @@ Kommitter = (function(_super) {
     });
     this.on("commit", function(message) {
       var commitText, commitedFiles;
-      commitedFiles = _this.staged.join('');
+      commitedFiles = _this.staged.join(" ");
+      if (commitedFiles.length === 0) {
+        new KDNotificationView({
+          title: "No file staged to commit!",
+          cssClass: "error",
+          type: "mini"
+        });
+        return false;
+      }
       commitText = "git commit -m " + message + " " + commitedFiles;
       return _this.doKiteRequest("cd " + _this.repoPath + " ; " + commitText, function(res) {
-        return new KDNotificationView({
-          type: 'mini',
-          title: res.split('\n')[1],
+        new KDNotificationView({
+          type: "mini",
+          title: res.split("\n")[1],
           duration: 5000
         });
+        return _this.delegate.emit("kommitted");
       });
     });
     this.on("push", function() {
       return _this.doKiteRequest("cd " + _this.repoPath + " ; git push", function(res) {});
     });
+    this.on("refresh", function() {
+      var _ref;
+      _this.statusObj = _this.getNewStatusObj();
+      if ((_ref = _this.aceEditor) != null) {
+        _ref.getSession().setValue("");
+      }
+      return _this.getStatus();
+    });
     this.getStatus();
   }
+
+  Kommitter.prototype.getNewStatusObj = function() {
+    return {
+      branch: [],
+      modified: [],
+      added: [],
+      deleted: [],
+      untracked: []
+    };
+  };
 
   Kommitter.prototype.getStatus = function(repoPath) {
     var _this = this;
@@ -178,8 +267,9 @@ Kommitter = (function(_super) {
         }
       } else {
         return new KDNotificationView({
-          title: "An error occured while processing your request, try again please!",
+          title: "An error occured while processing your request, please try again!",
           type: "mini",
+          cssClass: "error",
           duration: 3000
         });
       }
@@ -202,13 +292,11 @@ var BaseView,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-KD.enableLogs();
-
 BaseView = (function(_super) {
 
   __extends(BaseView, _super);
 
-  function BaseView(options) {
+  function BaseView(options, data) {
     var buttonsView,
       _this = this;
     if (options == null) {
@@ -218,15 +306,30 @@ BaseView = (function(_super) {
 
     this.ace = options.ace;
     options.cssClass = "kommitter-app";
-    BaseView.__super__.constructor.call(this, options);
-    this.branchName = new KDView({
+    BaseView.__super__.constructor.call(this, options, data);
+    this.reposView = new ReposView({
+      delegate: this
+    });
+    this.container = new KDView({
+      cssClass: "kommitter-base-container"
+    });
+    this.container.addSubView(this.branchName = new KDView({
       cssClass: "kommitter-branch-name",
       partial: "Current branch: ... "
-    });
+    }));
     this.workingDirView = new KDView;
     this.stagedFilesView = new KDView;
     this.diffView = new KDView;
-    buttonsView = new KDView;
+    this.kommitView = new KDView;
+    this.kommitView.addSubView(buttonsView = new KDView({
+      cssClass: "kommitter-buttons-view"
+    }));
+    buttonsView.addSubView(this.refreshButton = new KDButtonView({
+      title: "Refresh",
+      callback: function() {
+        return _this.refresh();
+      }
+    }));
     buttonsView.addSubView(this.commitButton = new KDButtonView({
       title: "Commit",
       callback: function() {
@@ -239,16 +342,10 @@ BaseView = (function(_super) {
         return _this.push();
       }
     }));
-    this.kommitMessageTextarea = new KDInputView({
+    this.kommitView.addSubView(this.kommitMessageTextarea = new KDInputView({
       type: "textarea",
       placeholder: "Commit message"
-    });
-    this.kommitView = new KDSplitView({
-      type: "vertical",
-      resizable: false,
-      sizes: [100, null],
-      views: [buttonsView, this.kommitMessageTextarea]
-    });
+    }));
     this.leftView = new KDSplitView({
       cssClass: "left-view",
       type: "horizontal",
@@ -263,14 +360,13 @@ BaseView = (function(_super) {
       sizes: ["75%", null],
       views: [this.diffView, this.kommitView]
     });
-    this.baseView = new KDSplitView({
+    this.container.addSubView(this.baseView = new KDSplitView({
       cssClass: "base-view",
       type: "vertical",
       resizable: true,
       sizes: ["25%", null],
       views: [this.leftView, this.rightView]
-    });
-    this.kommitter = new Kommitter("GitHub/geneJS/", this);
+    }));
     this.on("status", function(res) {
       _this.updateBranchName(res.branch[0]);
       delete res.branch;
@@ -289,7 +385,21 @@ BaseView = (function(_super) {
     this.on("diff", function(path) {
       return _this.kommitter.emit("diff", path);
     });
+    this.on("kommitted", function() {
+      _this.stagedFilesView.destroySubViews();
+      return _this.kommitMessageTextarea.setValue("");
+    });
   }
+
+  BaseView.prototype.initialize = function() {
+    var height;
+    this.kommitter = new Kommitter({
+      delegate: this
+    }, this.getData());
+    height = this.getHeight();
+    this.reposView.$().css("top", -height);
+    return this.container.$().css("top", -height);
+  };
 
   BaseView.prototype.updateBranchName = function(branchName) {
     return this.branchName.updatePartial("Current branch: " + branchName);
@@ -320,11 +430,25 @@ BaseView = (function(_super) {
   };
 
   BaseView.prototype.commit = function() {
-    return this.kommitter.emit("commit", FSHelper.escapeFilePath(this.kommitMessageTextarea.getValue()));
+    if (this.kommitMessageTextarea.getValue() !== "") {
+      return this.kommitter.emit("commit", FSHelper.escapeFilePath(this.kommitMessageTextarea.getValue()));
+    } else {
+      return new KDNotificationView({
+        title: "Commit message cannot be empty.",
+        cssClass: "error",
+        type: "mini"
+      });
+    }
   };
 
   BaseView.prototype.push = function() {
     return this.kommitter.emit("push");
+  };
+
+  BaseView.prototype.refresh = function() {
+    this.workingDirView.destroySubViews();
+    this.stagedFilesView.destroySubViews();
+    return this.kommitter.emit("refresh");
   };
 
   BaseView.prototype.updateWorkingDir = function(files) {
@@ -356,7 +480,7 @@ BaseView = (function(_super) {
   };
 
   BaseView.prototype.pistachio = function() {
-    return "{{> this.branchName}}\n{{> this.baseView}}";
+    return "{{> this.reposView}}\n{{> this.container}}";
   };
 
   return BaseView;
