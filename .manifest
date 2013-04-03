@@ -13,6 +13,7 @@
     "blocks": {
       "app": {
         "files": [
+          "./app/ReposView.coffee",
           "./app/FileItem.coffee",
           "./app/Kommitter.coffee",
           "./app/BaseView.coffee",
