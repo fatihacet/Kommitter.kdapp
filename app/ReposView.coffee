@@ -11,31 +11,23 @@ class ReposView extends JView
     
     @findReposAndCreateRepoItems()
     
+  getAppIcon: (appName) ->
+    icons = @apps?[appName]?.icns
+    if icons and (icon = icons["128"] or icons["160"] or icons["256"])
+      icon = "https://#{nickname}.koding.com/.applications/#{appName.toLowerCase()}/#{icon.substring 1, icon.length}"
+    return icon or ""
+    
   findReposAndCreateRepoItems: ->
-    KD.getSingleton("kiteController").run """find -P "/Users/#{nickname}/Applications/" -maxdepth 4 -name ".git" -type d""", (err, res) =>
-      lines = res.split "\n"
-      @addSubView new RepoItem { delegate: @getDelegate() }, line.replace ".git", "" for line in lines when line
-    
-    
-class RepoItem extends JView 
-  
-  constructor: (options = {}, data) ->
-    
-    options.cssClass = "kommitter-repo-item"
-    
-    super options, data
-    
-  click: ->
-    baseView = @getDelegate()
-    baseView.setData @getData()
-    baseView.initialize()
-    
-  pistachio: ->
-    data  = @getData()
-    words = data.split("/")
-    name  = words[words.length - 2]
-    """
-      <img class="kommitter-repo-icon" src="https://app.koding.com/gokmen/Sample/0.1.1/resources/icon.128.png" />
-      <span class="kommitter-repo-name">#{name}</span>
-      <span class="kommitter-repo-path">#{data}</span>
-    """
+    command = """find -P "/Users/#{nickname}/Applications/" -maxdepth 4 -name ".git" -type d"""
+    KD.getSingleton("kiteController").run command, (err, repos) =>
+      KD.getSingleton("kodingAppsController").fetchAppsFromDb (err, apps) =>
+        @apps = apps
+        repoPaths  = repos.split "\n"
+        itemConfig = { delegate: @getDelegate() }
+        for repoPath in repoPaths when repoPath
+          repoPath = repoPath.replace ".git", ""
+          if repoPath.indexOf(".kdapp") > -1
+            appName = FSHelper.getFileNameFromPath repoPath.substring 0, repoPath.length - 1
+            appIcon = @getAppIcon appName.replace ".kdapp", ""
+            itemConfig.appIcon = appIcon if appIcon
+          @addSubView new RepoItem itemConfig, repoPath
