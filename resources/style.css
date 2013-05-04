@@ -27,7 +27,7 @@
   width: 60px;
   margin-bottom: 8px;
 }
-textarea {
+.kommitter textarea {
   margin: 15px 20px 0 15px;
   width: 400px;
   height: 40px;
@@ -90,8 +90,9 @@ textarea {
   font-style: italic;
   color: #777;
 }
-
-
+.kommitter-repos-view {
+  overflow-y: auto; 
+}
 .kommitter-icon-deleted   { background: red;  }
 .kommitter-icon-untracked { background: gray; }
 .kommitter-icon-modified  { background: blue; }
