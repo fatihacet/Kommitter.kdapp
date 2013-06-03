@@ -13,60 +13,72 @@ class BaseView extends JView
     @container = new KDView
       cssClass : "kommitter-base-container"
     
-    @container.addSubView @branchName = new KDView
-      cssClass : "kommitter-branch-name"
-      partial  : "Current branch: ... "
+    #@container.addSubView @branchName = new KDView
+      #cssClass : "kommitter-branch-name"
+      #partial  : "Current branch: ... "
       
-    @workingDirView = new KDView
+    #@workingDirView = new KDView
       
-    @stagedFilesView = new KDView
+    #@stagedFilesView = new KDView
       
-    @diffView = new KDView
+    #@diffView = new KDView
     
-    @kommitView = new KDView
+    #@kommitView = new KDView
     
-    @kommitView.addSubView buttonsView = new KDView
-      cssClass : "kommitter-buttons-view"
-    
-    buttonsView.addSubView @refreshButton = new KDButtonView
-      title    : "Refresh"
-      callback : => @refresh()
-    
-    buttonsView.addSubView @commitButton = new KDButtonView
-      title    : "Commit"
-      callback : => @commit()
-    
-    buttonsView.addSubView @pushButton = new KDButtonView
-      title    : "Push"
-      callback : => @push()
-    
-    @kommitView.addSubView @kommitMessageTextarea = new KDInputView
-      type        : "textarea"
-      placeholder : "Commit message"
+    #@kommitView.addSubView buttonsView = new KDView
+      #cssClass : "kommitter-buttons-view"
+    #
+    #buttonsView.addSubView @refreshButton = new KDButtonView
+      #title    : "Refresh"
+      #callback : => @refresh()
+    #
+    #buttonsView.addSubView @commitButton = new KDButtonView
+      #title    : "Commit"
+      #callback : => @commit()
+    #
+    #buttonsView.addSubView @pushButton = new KDButtonView
+      #title    : "Push"
+      #callback : => @push()
+    #
+    #@kommitView.addSubView @kommitMessageTextarea = new KDInputView
+      #type        : "textarea"
+      #placeholder : "Commit message"
       
-    @leftView = new KDSplitView
-      cssClass    : "left-view"
+    #@leftView = new KDSplitView
+      #cssClass    : "left-view"
+      #type        : "horizontal"
+      #resizable   : yes
+      #sizes       : [ "75%", null ]
+      #views       : [ @workingDirView, @stagedFilesView ]
+      #
+    #@rightView = new KDSplitView
+      #cssClass    : "left-view"
+      #type        : "horizontal"
+      #resizable   : yes
+      #sizes       : [ "75%", null ]
+      #views       : [ @diffView, @kommitView ]
+      #
+    
+    @navigationPane = new NavigationPane
+    @fileDiffView   = new FileDiffView
+    @repoTabView    = new RepoTabView
+    
+    @mainStage      = new KDSplitView
+      cssClass    : "main-stage"
       type        : "horizontal"
       resizable   : yes
-      sizes       : [ "75%", null ]
-      views       : [ @workingDirView, @stagedFilesView ]
-      
-    @rightView = new KDSplitView
-      cssClass    : "left-view"
-      type        : "horizontal"
-      resizable   : yes
-      sizes       : [ "75%", null ]
-      views       : [ @diffView, @kommitView ]
-      
+      sizes       : [ "30%", "70&" ]
+      views       : [ @repoTabView, @fileDiffView ]
+    
     @container.addSubView @baseView = new KDSplitView
       cssClass    : "base-view"
       type        : "vertical"
       resizable   : yes
       sizes       : [ "25%", null ]
-      views       : [ @leftView, @rightView ]
+      views       : [ @navigationPane, @mainStage ]
     
     @on "status", (res) =>
-      @updateBranchName res.branch[0]
+      @navigationPane.emit "UpdateBranchList", res.branch[0]
       delete res.branch
       @updateWorkingDir res
     
@@ -95,9 +107,6 @@ class BaseView extends JView
     @reposView.$().css "top", -height
     @container.$().css "top", -height
 
-  updateBranchName: (branchName) ->
-    @branchName.updatePartial "Current branch: #{branchName}"
-    
   stage: (item) ->
     @workingDirView.removeSubView item
     initialType = item.getOptions().type
