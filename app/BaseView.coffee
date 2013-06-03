@@ -149,5 +149,5 @@ class BaseView extends JView
     
   pistachio: -> """
     {{> @reposView}}
-    {{> @container }}
+    {{> @container}}
   """ 
