@@ -19,7 +19,7 @@ class ReposView extends JView
     command = """find -P . -maxdepth 4 -name ".git" -type d"""
     kiteController.run command, (err, repos) =>
       kodingAppsController.fetchApps (err, apps) =>
-        @apps = apps
+        @apps      = apps
         repoPaths  = repos.split "\n"
         itemConfig = { delegate: @getDelegate() }
         for repoPath in repoPaths when repoPath

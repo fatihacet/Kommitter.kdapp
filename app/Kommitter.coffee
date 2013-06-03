@@ -31,7 +31,7 @@ class Kommitter extends KDObject
           type     : "mini"
         return no
       
-      commitText    = "git commit -m #{message} #{commitedFiles}"
+      commitText   = "git commit -m #{message} #{commitedFiles}"
       
       @doKiteRequest "cd #{@repoPath} ; #{commitText}", (res) =>
         # TODO: Error check
@@ -74,7 +74,7 @@ class Kommitter extends KDObject
   
   parseOutput: (res) ->
     results = res.split "\n"
-    keys = @statusKeys;
+    keys    = @statusKeys;
     
     for result in results
       for key of @statusKeys
