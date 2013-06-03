@@ -6,11 +6,11 @@ class RepoItem extends JView
     
     super options, data
     
-    @image = new KDCustomHTMLView
-      tagName: "span"
+    @image    = new KDCustomHTMLView
+      tagName : "span"
     
     if @getOptions().appIcon
-      @image = new KDCustomHTMLView
+      @image       = new KDCustomHTMLView
         tagName    : "img"
         cssClass   : "kommitter-repo-icon"
         attributes :
@@ -23,7 +23,7 @@ class RepoItem extends JView
     
   pistachio: ->
     data  = @getData()
-    words = data.split("/")
+    words = data.split "/"
     name  = words[words.length - 2]
     """
       {{> @image}}
