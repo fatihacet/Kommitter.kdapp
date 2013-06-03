@@ -60,8 +60,8 @@ class Kommitter extends KDObject
     deleted       : []
     untracked     : []
     
-  getStatus: (repoPath) =>
-    @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath} ; git branch ; git status -s", (res) =>
+  getStatus: =>
+    @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath.replace "./", ""} ; git branch ; git status -s", (res) =>
       @parseOutput res
       @getDelegate().emit "status", @statusObj
       
