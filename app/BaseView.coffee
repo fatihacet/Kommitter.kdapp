@@ -2,80 +2,30 @@ class BaseView extends JView
 
   constructor: (options = {}, data) ->
     
-    @ace             = options.ace
     options.cssClass = "kommitter-app"
     
     super options, data
     
-    @reposView = new ReposView
-      delegate : @
+    @container      = new KDView         cssClass : "kommitter-base-container"
+    @reposView      = new ReposView      delegate : @
+    @navigationPane = new NavigationPane delegate : @
+    @fileDiffView   = new FileDiffView   delegate : @, ace : @getOptions().ace
     
-    @container = new KDView
-      cssClass : "kommitter-base-container"
-    
-    #@container.addSubView @branchName = new KDView
-      #cssClass : "kommitter-branch-name"
-      #partial  : "Current branch: ... "
-      
-    #@workingDirView = new KDView
-      
-    #@stagedFilesView = new KDView
-      
-    #@diffView = new KDView
-    
-    #@kommitView = new KDView
-    
-    #@kommitView.addSubView buttonsView = new KDView
-      #cssClass : "kommitter-buttons-view"
-    #
-    #buttonsView.addSubView @refreshButton = new KDButtonView
-      #title    : "Refresh"
-      #callback : => @refresh()
-    #
-    #buttonsView.addSubView @commitButton = new KDButtonView
-      #title    : "Commit"
-      #callback : => @commit()
-    #
-    #buttonsView.addSubView @pushButton = new KDButtonView
-      #title    : "Push"
-      #callback : => @push()
-    #
-    #@kommitView.addSubView @kommitMessageTextarea = new KDInputView
-      #type        : "textarea"
-      #placeholder : "Commit message"
-      
-    #@leftView = new KDSplitView
-      #cssClass    : "left-view"
-      #type        : "horizontal"
-      #resizable   : yes
-      #sizes       : [ "75%", null ]
-      #views       : [ @workingDirView, @stagedFilesView ]
-      #
-    #@rightView = new KDSplitView
-      #cssClass    : "left-view"
-      #type        : "horizontal"
-      #resizable   : yes
-      #sizes       : [ "75%", null ]
-      #views       : [ @diffView, @kommitView ]
-      #
-    
-    @navigationPane = new NavigationPane
-    @fileDiffView   = new FileDiffView
-    @repoTabView    = new RepoTabView
+    @createRepoTabView()
     
     @mainStage      = new KDSplitView
-      cssClass    : "main-stage"
-      type        : "horizontal"
-      resizable   : yes
-      sizes       : [ "30%", "70&" ]
-      views       : [ @repoTabView, @fileDiffView ]
+      cssClass      : "main-stage"
+      type          : "horizontal"
+      resizable     : yes
+      sizes         : [ "30%", "70%" ]
+      views         : [ @repoTabView, @fileDiffView ]
     
     @container.addSubView @baseView = new KDSplitView
-      cssClass    : "base-view"
-      type        : "vertical"
-      resizable   : yes
-      sizes       : [ "25%", null ]
-      views       : [ @navigationPane, @mainStage ]
+      cssClass      : "base-view"
+      type          : "vertical"
+      resizable     : yes
+      sizes         : [ "25%", null ]
+      views         : [ @navigationPane, @mainStage ]
     
     @on "status", (res) =>
       @navigationPane.emit "UpdateBranchList", res.branch[0]
@@ -110,20 +60,20 @@ class BaseView extends JView
   stage: (item) ->
     @workingDirView.removeSubView item
     initialType = item.getOptions().type
-    newItem = new FileItem
-      delegate : @
-      path     : item.getOptions().path
-      type     : "added"
-      oldType  : initialType
+    newItem     = new FileItem
+      delegate  : @
+      path      : item.getOptions().path
+      type      : "added"
+      oldType   : initialType
       
     @stagedFilesView.addSubView newItem
     
   unstage: (item) ->
     @stagedFilesView.removeSubView item
-    newItem = new FileItem
-      delegate : @
-      path     : item.getOptions().path
-      type     : item.getOptions().oldType
+    newItem     = new FileItem
+      delegate  : @
+      path      : item.getOptions().path
+      type      : item.getOptions().oldType
       
     @workingDirView.addSubView newItem
     
@@ -148,15 +98,38 @@ class BaseView extends JView
     for fileList of files
       for file in files[fileList]
         do (file) =>
-          item = new FileItem
+          item       = new FileItem
             delegate : @
             path     : file
             type     : fileList # TODO: naming confusion
             
           target =  if fileList == "added" then @stagedFilesView else @workingDirView
           target.addSubView item
+          
+  createRepoTabView: ->
+    @repoTabView    = new KDTabView
+      cssClass      : "repo-tabs"
+      height        : "auto"
+      hideHandleCloseIcons : yes
+      
+    @repoTabView.addPane statusTab = new KDTabPaneView
+      name          : "Status"
+      cssClass      : "status-tab"
+      
+    @repoTabView.addPane commits   = new KDTabPaneView
+      name          : "Commits"
+      cssClass      : "commits-tab"
+      partial       : "Commits feature will be added soon!"
     
-  pistachio: -> """
-    {{> @reposView}}
-    {{> @container}}
-  """ 
+    @repoTabView.addPane browseTab = new KDTabPaneView
+      name          : "Browse"
+      cssClass      : "browse-tab"
+      partial       : "Browse feature will be added soon!"
+      
+    @repoTabView.showPaneByIndex 0
+    
+  pistachio: ->
+    """
+      {{> @reposView}}
+      {{> @container}}
+    """ 

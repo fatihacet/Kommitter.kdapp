@@ -29,8 +29,9 @@ class NavigationPane extends JView
     @on "UpdateBranchList", (list) ->
       @branchName.updatePartial "#{list} (HEAD)"
         
-  pistachio: -> """
-    {{> @branches}}
-    {{> @remotes}}
-    {{> @stashes}}
-  """
+  pistachio: -> 
+    """
+      {{> @branches}}
+      {{> @remotes}}
+      {{> @stashes}}
+    """

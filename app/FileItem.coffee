@@ -10,19 +10,7 @@ class FileItem extends KDListItemView
     @path     = @getOptions().path
     @isStaged = @type == "added"
     
-  
-  getIcon: (type) ->
-    """
-      <div class="kommitter-icon kommitter-icon-#{type}"></div>
-    """
-  
-  
-  getStagedStatus: ->
-    @isStaged
-    
-  
-  partial: -> "#{ @getIcon @getOptions().type}#{ @getOptions().path}"
-  
+  getStagedStatus: -> @isStaged
   
   click: (e) =>
     if $(e.target).hasClass 'kommitter-icon'
@@ -30,4 +18,10 @@ class FileItem extends KDListItemView
       @getDelegate().emit "stageOrUnstage", @
     else 
       @getDelegate().emit "diff", @path
+      
+  getIcon: (type) ->
+    """
+      <div class="kommitter-icon kommitter-icon-#{type}"></div>
+    """
   
+  partial: -> "#{ @getIcon @getOptions().type}#{ @getOptions().path}"
