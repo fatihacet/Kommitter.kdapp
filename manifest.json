@@ -18,7 +18,6 @@
           "./app/ReposView.coffee",
           "./app/FileItem.coffee",
           "./app/NavigationPane.coffee",
-          "./app/RepoTabView.coffee",
           "./app/FileDiffView.coffee",
           "./app/Kommitter.coffee",
           "./app/BaseView.coffee",
