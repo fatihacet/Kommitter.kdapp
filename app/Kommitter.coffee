@@ -36,7 +36,8 @@ class Kommitter extends KDObject
           title    : res.split("\n")[1]
           duration : 5000
         
-        @delegate.emit "kommitted"
+        @delegate.emit "Kommitted", @staged
+        @staged.length = 0
       
     @on "push", =>
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
