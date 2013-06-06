@@ -6,8 +6,6 @@ class FileDiffView extends JView
     
     super options, data
     
-    {@ace}      = @getOptions()
-    
     @noDiffView = new KDView
       cssClass  : "no-diff-view"
       partial   : "Select a file to see its diff here."
@@ -15,8 +13,11 @@ class FileDiffView extends JView
     @diffView   = new KDCustomHTMLView
       tagName   : "pre"
       
+    @diffView.hide()
+      
     @on "ShowDiff", (diff) =>
       @noDiffView.hide()
+      @diffView.show()
       @diffView.updatePartial diff.replace(/^\+.*$/gm, '<span class=added>$&</span>')
       .replace(/^-.*$/gm, '<span class=removed>$&</span>')
       .replace(/^@.*$/gm, '<span class=line-numbers>$&</span>')
