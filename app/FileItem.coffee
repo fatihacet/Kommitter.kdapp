@@ -11,12 +11,6 @@ class FileItem extends KDListItemView
     
     @createElements()
     
-    @on "stage", ->
-      log "staged"
-    
-    @on "unstage", ->
-      log "unstaged"
-    
   getStagedStatus: -> @isStaged
   
   createElements: ->
