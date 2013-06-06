@@ -56,7 +56,7 @@ class BaseView extends JView
       @kommitMessageTextarea.setValue ""
       
     @on "ShowKommitDialog", =>
-      @kommitView.setClass "active"
+      @kommitView.display()
       
   initialize: ->
     @kommitter = new Kommitter
