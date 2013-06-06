@@ -55,6 +55,9 @@ class BaseView extends JView
       @stagedFilesView.destroySubViews()
       @kommitMessageTextarea.setValue ""
       
+    @on "ShowKommitDialog", =>
+      @kommitView.setClass "active"
+      
   initialize: ->
     @kommitter = new Kommitter
       delegate: @
@@ -91,11 +94,15 @@ class BaseView extends JView
     @repoTabView.addPane commitsTab = new KDTabPaneView
       name          : "Commits"
       cssClass      : "commits-tab"
+    
+    commitsTab.addSubView new KDView
       partial       : "Commits feature will be added soon!"
     
     @repoTabView.addPane browseTab = new KDTabPaneView
       name          : "Browse"
       cssClass      : "browse-tab"
+      
+    browseTab.addSubView new KDView
       partial       : "Browse feature will be added soon!"
       
     @repoTabView.showPaneByIndex 0
