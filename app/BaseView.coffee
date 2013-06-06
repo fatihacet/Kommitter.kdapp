@@ -10,7 +10,7 @@ class BaseView extends JView
     @reposView      = new ReposView      delegate : @
     @kommitView     = new KommitView     delegate : @
     @navigationPane = new NavigationPane delegate : @
-    @fileDiffView   = new FileDiffView   delegate : @, ace : @getOptions().ace
+    @fileDiffView   = new FileDiffView   delegate : @
     
     @createRepoTabView()
     
@@ -52,8 +52,8 @@ class BaseView extends JView
       @fileDiffView.emit "ShowDiff", diff
     
     @on "kommitted", =>
-      @stagedFilesView.destroySubViews()
-      @kommitMessageTextarea.setValue ""
+      @kommitView.emit "KommitDone"
+      @statusList.emit "KommitDone"
       
     @on "ShowKommitDialog", =>
       @kommitView.setActive()
@@ -79,7 +79,7 @@ class BaseView extends JView
     @kommitter.emit "refresh"
     
   updateStatusList: (files) ->
-    @statusTab.addSubView new StatusList { delegate: @ }, files
+    @statusTab.addSubView @statusList = new StatusList { delegate: @ }, files
           
   createRepoTabView: ->
     @repoTabView    = new KDTabView
