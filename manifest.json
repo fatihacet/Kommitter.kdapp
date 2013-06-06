@@ -17,6 +17,8 @@
           "./app/RepoItem.coffee",
           "./app/ReposView.coffee",
           "./app/FileItem.coffee",
+          "./app/StatusList.coffee",
+          "./app/KommitView.coffee",
           "./app/NavigationPane.coffee",
           "./app/FileDiffView.coffee",
           "./app/Kommitter.coffee",
