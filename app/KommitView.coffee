@@ -21,6 +21,10 @@ class KommitView extends JView
       callback    : @bound "unsetActive"
       
     @hide()
+    
+    @on "KommitDone", =>
+      @textarea.setValue ""
+      @unsetActive()
   
   kommit: ->
     message = @textarea.getValue()
