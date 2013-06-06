@@ -73,6 +73,10 @@
       "eventName" : "applyStash"
     },
     {
+      "title"     : "Ignore Changes",
+      "eventName" : "ignore"
+    },
+    {
       "type"     : "separator"
     },
     {

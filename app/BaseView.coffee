@@ -149,6 +149,7 @@ class BaseView extends JView
       pull       : "NotImplementedYet"
       kommit     : "ShowKommitDialog"
       push       : "NotImplementedYet"
+      ignore     : "IgnoreChanges"
       saveStash  : "NotImplementedYet"
       applyStash : "NotImplementedYet"
       about      : "ShowAbout"
