@@ -23,6 +23,10 @@ class FileDiffView extends JView
       .replace(/^@.*$/gm, '<span class=line-numbers>$&</span>')
       .replace(/^([iI]ndex:?|diff --git) .*$/gim, '<span class=filename>$&</span>')
       
+    @on "KommitDone", =>
+      @diffView.updatePartial ""
+      @noDiffView.show()
+      
   pistachio: -> 
     """
       {{> @noDiffView}}
