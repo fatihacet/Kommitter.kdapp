@@ -6,20 +6,20 @@ class RepoItem extends JView
     
     super options, data
     
-    @image    = new KDCustomHTMLView
-      tagName : "span"
-    
-    if @getOptions().appIcon
-      @image       = new KDCustomHTMLView
-        tagName    : "img"
-        cssClass   : "kommitter-repo-icon"
-        attributes :
-          src      : @getOptions().appIcon
+    @image       = new KDCustomHTMLView
+      tagName    : "img"
+      cssClass   : "kommitter-repo-icon"
+      bind       : "error"
+      error      : => @setDefaultIcon()
+      attributes : src : @getOptions().appIcon
     
   click: ->
     baseView = @getDelegate()
     baseView.setData @getData()
     baseView.initialize()
+    
+  setDefaultIcon: ->
+    @image.getDomElement().attr "src", "https://koding.com/images/default.app.thumb.png"
     
   pistachio: ->
     data  = @getData()

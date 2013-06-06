@@ -14,15 +14,11 @@ class Kommitter extends KDObject
     @on "unstage", (item) =>
       @staged.splice @staged.indexOf(item.getOptions().path), 1
       
-    @on "diff", (path) =>
+    @on "Diff", (path) =>
       @doKiteRequest "cd #{@repoPath} ; git diff #{path}", (res) =>
-        @aceEditor = @delegate.ace.edit @delegate.diffView.domElement[0]
-        @aceEditor.setTheme "ace/theme/monokai"
-        @aceEditor.getSession().setMode "ace/mode/diff"
-        @aceEditor.setReadOnly true
-        @aceEditor.getSession().setValue res
+        @getDelegate().emit "ShowDiff", res
         
-    @on "commit", (message) =>
+    @on "kommit", (message) =>
       commitedFiles = @staged.join " "
       if commitedFiles.length is 0
         new KDNotificationView

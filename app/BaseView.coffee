@@ -2,85 +2,54 @@ class BaseView extends JView
 
   constructor: (options = {}, data) ->
     
-    @ace             = options.ace
     options.cssClass = "kommitter-app"
     
     super options, data
     
-    @reposView = new ReposView
-      delegate : @
+    @container      = new KDView         cssClass : "kommitter-base-container"
+    @reposView      = new ReposView      delegate : @
+    @kommitView     = new KommitView     delegate : @
+    @navigationPane = new NavigationPane delegate : @
+    @fileDiffView   = new FileDiffView   delegate : @, ace : @getOptions().ace
     
-    @container = new KDView
-      cssClass : "kommitter-base-container"
+    @createRepoTabView()
     
-    @container.addSubView @branchName = new KDView
-      cssClass : "kommitter-branch-name"
-      partial  : "Current branch: ... "
-      
-    @workingDirView = new KDView
-      
-    @stagedFilesView = new KDView
-      
-    @diffView = new KDView
+    @mainStage      = new KDSplitView
+      cssClass      : "main-stage"
+      type          : "horizontal"
+      resizable     : no
+      sizes         : [ "30%", null ]
+      views         : [ @repoTabView, @fileDiffView ]
     
-    @kommitView = new KDView
-    
-    @kommitView.addSubView buttonsView = new KDView
-      cssClass : "kommitter-buttons-view"
-    
-    buttonsView.addSubView @refreshButton = new KDButtonView
-      title    : "Refresh"
-      callback : => @refresh()
-    
-    buttonsView.addSubView @commitButton = new KDButtonView
-      title    : "Commit"
-      callback : => @commit()
-    
-    buttonsView.addSubView @pushButton = new KDButtonView
-      title    : "Push"
-      callback : => @push()
-    
-    @kommitView.addSubView @kommitMessageTextarea = new KDInputView
-      type        : "textarea"
-      placeholder : "Commit message"
-      
-    @leftView = new KDSplitView
-      cssClass    : "left-view"
-      type        : "horizontal"
-      resizable   : yes
-      sizes       : [ "75%", null ]
-      views       : [ @workingDirView, @stagedFilesView ]
-      
-    @rightView = new KDSplitView
-      cssClass    : "left-view"
-      type        : "horizontal"
-      resizable   : yes
-      sizes       : [ "75%", null ]
-      views       : [ @diffView, @kommitView ]
-      
     @container.addSubView @baseView = new KDSplitView
-      cssClass    : "base-view"
-      type        : "vertical"
-      resizable   : yes
-      sizes       : [ "25%", null ]
-      views       : [ @leftView, @rightView ]
+      cssClass      : "base-view"
+      type          : "vertical"
+      resizable     : no
+      sizes         : [ "15%", null ]
+      views         : [ @navigationPane, @mainStage ]
     
     @on "status", (res) =>
-      @updateBranchName res.branch[0]
+      @navigationPane.emit "UpdateBranchList", res.branch[0]
       delete res.branch
-      @updateWorkingDir res
+      @updateStatusList res
+      
+    @on "Kommit", (message) =>
+      @kommit message
     
     @on "updateStatus", (res) =>
       @removeLeftPanelSubViews()
-      @updateWorkingDir res
+      @updateStatusList res
     
-    @on "stageOrUnstage", (item) =>
+    @on "StageOrUnstage", (item) =>
       eventName = if item.getStagedStatus() then "stage" else "unstage"
-      @[eventName] item
+      item.emit eventName
       @kommitter.emit eventName, item
     
-    @on "diff", (path) =>
-      @kommitter.emit "diff", path
+    @on "Diff", (path) =>
+      @kommitter.emit "Diff", path
+      
+    @on "ShowDiff", (diff) =>
+      @fileDiffView.emit "ShowDiff", diff
     
     @on "kommitted", =>
       @stagedFilesView.destroySubViews()
@@ -95,37 +64,8 @@ class BaseView extends JView
     @reposView.$().css "top", -height
     @container.$().css "top", -height
 
-  updateBranchName: (branchName) ->
-    @branchName.updatePartial "Current branch: #{branchName}"
-    
-  stage: (item) ->
-    @workingDirView.removeSubView item
-    initialType = item.getOptions().type
-    newItem = new FileItem
-      delegate : @
-      path     : item.getOptions().path
-      type     : "added"
-      oldType  : initialType
-      
-    @stagedFilesView.addSubView newItem
-    
-  unstage: (item) ->
-    @stagedFilesView.removeSubView item
-    newItem = new FileItem
-      delegate : @
-      path     : item.getOptions().path
-      type     : item.getOptions().oldType
-      
-    @workingDirView.addSubView newItem
-    
-  commit: ->
-    if @kommitMessageTextarea.getValue() isnt ""
-      @kommitter.emit "commit", FSHelper.escapeFilePath @kommitMessageTextarea.getValue()
-    else 
-      new KDNotificationView
-        title    : "Commit message cannot be empty."
-        cssClass : "error"
-        type     : "mini"
+  kommit: (message) ->
+    @kommitter.emit "kommit", FSHelper.escapeFilePath message
     
   push: ->
     @kommitter.emit "push"
@@ -135,19 +75,34 @@ class BaseView extends JView
     @stagedFilesView.destroySubViews()
     @kommitter.emit "refresh"
     
-  updateWorkingDir: (files) =>
-    for fileList of files
-      for file in files[fileList]
-        do (file) =>
-          item = new FileItem
-            delegate : @
-            path     : file
-            type     : fileList # TODO: naming confusion
-            
-          target =  if fileList == "added" then @stagedFilesView else @workingDirView
-          target.addSubView item
+  updateStatusList: (files) ->
+    @statusTab.addSubView new StatusList { delegate: @ }, files
+          
+  createRepoTabView: ->
+    @repoTabView    = new KDTabView
+      cssClass      : "repo-tabs"
+      height        : "auto"
+      hideHandleCloseIcons : yes
+      
+    @repoTabView.addPane @statusTab = new KDTabPaneView
+      name          : "Status"
+      cssClass      : "status-tab"
+      
+    @repoTabView.addPane commitsTab = new KDTabPaneView
+      name          : "Commits"
+      cssClass      : "commits-tab"
+      partial       : "Commits feature will be added soon!"
     
-  pistachio: -> """
-    {{> @reposView}}
-    {{> @container}}
-  """ 
+    @repoTabView.addPane browseTab = new KDTabPaneView
+      name          : "Browse"
+      cssClass      : "browse-tab"
+      partial       : "Browse feature will be added soon!"
+      
+    @repoTabView.showPaneByIndex 0
+    
+  pistachio: ->
+    """
+      {{> @reposView}}
+      {{> @container}}
+      {{> @kommitView}}
+    """ 
