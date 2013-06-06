@@ -4,24 +4,30 @@ class StatusList extends JView
     
     super options, data
     
-    @items = []
-    
-    @header    = new KDHeaderView
-      cssClass : "status-list-header"
+    @items     = []
+    @header    = new KDView
+      cssClass : "working-dir-clean"
+      partial  : "Nothing to kommit, nothing to say."
       
     @container = new KDView
       cssClass : "status-list-container"
     
-    @createHeaderItem "Staged"
-    @createHeaderItem "Status"
-    @createHeaderItem "File Path"
-    
     @createItems @getData()
+    
+    @createHeaders() if @items.length
     
     @on "KommitDone", (staged) =>
       for path in staged
         item.destroy() for item in @items when item.path is path
     
+  createHeaders: ->
+    @header    = new KDHeaderView
+      cssClass : "status-list-header"
+    
+    @createHeaderItem "Staged"
+    @createHeaderItem "Status"
+    @createHeaderItem "File Path"
+  
   createHeaderItem: (title) ->
     @header.addSubView new KDView
       cssClass : @utils.curryCssClass "header-item", title.replace(" ", "").toLowerCase()
