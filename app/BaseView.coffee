@@ -56,7 +56,7 @@ class BaseView extends JView
       @kommitMessageTextarea.setValue ""
       
     @on "ShowKommitDialog", =>
-      @kommitView.display()
+      @kommitView.setActive()
       
   initialize: ->
     @kommitter = new Kommitter
@@ -106,6 +106,11 @@ class BaseView extends JView
       partial       : "Browse feature will be added soon!"
       
     @repoTabView.showPaneByIndex 0
+    
+  viewAppended: ->
+    super
+    @utils.wait 3000, =>
+      @kommitView.show() # to make a smooth animation, it will be unvisible.
     
   pistachio: ->
     """

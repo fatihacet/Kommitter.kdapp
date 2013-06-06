@@ -18,8 +18,10 @@ class KommitView extends JView
     @cancelButton = new KDButtonView
       cssClass    : "editor-button"
       title       : "Cancel"
-      callback    : @bound "hide"
+      callback    : @bound "unsetActive"
       
+    @hide()
+  
   kommit: ->
     message = @textarea.getValue()
     
@@ -29,10 +31,10 @@ class KommitView extends JView
       cssClass : "error"
       type     : "mini"
       
-  display: ->
+  setActive: ->
     @setClass "active"
   
-  hide: ->
+  unsetActive: ->
     @unsetClass "active"
     
   pistachio: -> 
