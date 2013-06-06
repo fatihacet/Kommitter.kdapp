@@ -36,5 +36,11 @@
   },
   "icns": {
     "128": "./resources/icon.128.png"
-  }
+  },
+  "menu": [
+    {
+      "title"     : "Kommit",
+      "eventName" : "kommit"
+    }
+  ]
 }
