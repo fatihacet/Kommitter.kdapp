@@ -4,6 +4,8 @@ class StatusList extends JView
     
     super options, data
     
+    @items = []
+    
     @header    = new KDHeaderView
       cssClass : "status-list-header"
       
@@ -15,6 +17,10 @@ class StatusList extends JView
     @createHeaderItem "File Path"
     
     @createItems @getData()
+    
+    @on "KommitDone", (staged) =>
+      for path in staged
+        item.destroy() for item in @items when item.path is path
     
   createHeaderItem: (title) ->
     @header.addSubView new KDView
@@ -39,6 +45,7 @@ class StatusList extends JView
       @selectedItem?.unsetClass "selected"
       @selectedItem = item
       
+    @items.push item
     @container.addSubView item
   
   pistachio: -> 
