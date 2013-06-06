@@ -1,3 +1,6 @@
+.kommitter {
+  cursor: default;
+}
 .kommitter-repo-view {
   background: #F7F7F7;
 }
@@ -10,13 +13,17 @@
 }
 .kommitter-branch-name, 
 .kommitter-file-item {
-  height: 25px;
+  height: 22px;
+  line-height: 22px;
 }
 .kommitter-icon {
   float: left;
   width: 16px;
   height: 16px;
-  margin-right: 10px;
+  margin-right: 28px;
+  top: 3px;
+  position: relative;
+  border-radius: 4px;
 }
 .kommitter-buttons-view {
   width: 100px;
@@ -28,9 +35,9 @@
   margin-bottom: 8px;
 }
 .kommitter textarea {
-  margin: 15px 20px 0 15px;
   width: 400px;
-  height: 40px;
+  height: 60px;
+  resize: none;
 }
 .kommitter-base-container {
   background: rgb(249,249,249); /* Old browsers */
@@ -75,12 +82,6 @@
   width: 96px; 
   float: left; 
   margin-right: 10px;
-  /*
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); 
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  background-color: rgba(255, 255, 255, 0.2);
-  */
 }
 .kommitter-repo-name { 
   font-size: 16px;
@@ -100,3 +101,198 @@
 .kommitter-icon-untracked { background: gray; }
 .kommitter-icon-modified  { background: blue; }
 .kommitter-icon-added     { background: green; }
+
+.status-list-header {
+  background-image: -moz-linear-gradient(100% 100% 90deg, #e4e5e7, #f8f8f8) !important;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e4e5e7)) !important;
+  background-image: -khtml-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e4e5e7)) !important;
+  background-image: -o-linear-gradient(#f8f8f8, #e4e5e7) !important;
+  border-bottom: 1px solid #c5c5c5 !important;
+}
+.kommitter .header-item {
+  border-bottom: 1px solid #c5c5c5;
+  border-right: 1px solid #c5c5c5;
+}
+.kommitter .header-item:last-child {
+  border-right: none;
+}
+.kommitter .status-list-header .header-item {
+  float: left;
+  text-align: center;
+}
+.kommitter .status-list-header .staged {
+  width: 60px;
+}
+.kommitter .status-list-header .status {
+  width: 50px;
+}
+.kommitter .status-list-header .filepath {
+  width: 70px;
+}
+.kommitter-file-item {
+  border-top: 1px solid #fafafa;
+  border-bottom: 1px solid #ededed;
+  padding: 1px;
+}
+.kommitter-file-item:nth-child(2n) {
+  background: #fafafa;
+}
+.kommitter-file-item:hover {
+  background: #efefef;
+  border-top: 1px solid #efefef;
+  border-bottom: 1px solid #efefef;
+}
+.kommitter-file-item .checkbox {
+  float: left;
+  margin-left: 27px;
+  margin-right: 43px;
+  top: 5px;
+  position: relative;
+}
+.kommitter-file-item .file-name {
+  float: left;
+  margin-right: 5px;
+  width: 80%;
+  cursor: pointer;
+}
+.kommitter .kdlistitemview:last-child {
+  border-bottom: 1px solid #ededed;
+}
+.kommitter .kdheaderview {
+  border-bottom: none;
+}
+.kommitter .nav-item {
+  height: auto;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: #666;
+  font-weight: bold;
+}
+.kommitter .branch-item {
+  text-indent: 10px;
+  font-weight: normal;
+  color: #444;
+  font-weight: 12px;
+  margin-top: 2px;
+}
+.kommitter .commits .kdview, 
+.kommitter .browse  .kdview,
+.kommitter .no-diff-view {
+  width: 360px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  margin: 0 auto;
+  top: 48%;
+  color: #666;
+  font-weight: bold;
+  font-size: 18px;
+}
+.kommitter .panel-0 {
+  border-right: 1px solid #CCC;
+}
+.kommitter .navigation-pane {
+  padding: 10px;
+}
+.kommitter .panel-1 .panel-1 > .kdview:first-child {
+  border-top: 1px solid #bababa;
+}
+.kommitter .status-tab {
+  background: #FFF;
+  border-left: 1px solid #CCC;
+}
+.kommitter .diff-view {
+  overflow: auto;
+}
+.kommitter pre {
+  padding: 5px 0 0 0;
+}
+.kommitter .removed {
+  background: #fdd;
+  display: inline-block;
+  width: 100%;
+}
+.kommitter .added {
+  background: #ddffdd;
+  display: inline-block;
+  width: 100%;
+}
+.kommitter .filename {
+  background: #F8EEC7;
+  display: inline-block;
+  width: 100%;
+}
+.kommitter .status-list-container,
+.kommitter .status-tab {
+  overflow: auto;
+}
+.kommitter .repo-tabs {
+  overflow: hidden;
+}
+.kommitter .main-stage .panel-1 {
+  box-shadow: 0 6px 13px -4px rgba(0, 0, 0, 0.3) inset;
+}
+.kommitter .kdtabhandlecontainer {
+  padding-top: 0;
+  height: 29px;
+}
+.kommitter .repo-tabs .kdtabhandle {
+  border: 1px solid #CCC;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  border-left: none;
+  padding: 0 25px;
+  color: #666;
+}
+.kommitter .repo-tabs .kdtabhandle:hover {
+  height: 29px;
+}
+.kommitter .repo-tabs .kdtabhandle:first-child {
+  margin-left: 0;
+  border-left: 1px solid #CCC;
+}
+.kommitter .repo-tabs .kdtabhandle b {
+  font-weight: bold;
+}
+.kommitter .repo-tabs .kdtabhandle.active {
+  background: #F7F7F7;
+  border-bottom: 1px solid #F7F7F7;
+  color: #ff9200;
+}
+.kommitter .repo-tabs .kdtabhandle {
+  background: rgb(255,255,255); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(221,221,221,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(221,221,221,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(221,221,221,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+}
+.kommitter .repo-tabs .selected {
+  background: rgba(255, 146, 0, 0.4);
+}
+.kommitter .kommit-view {
+  top: -200px;
+  position: absolute;
+  left: 50%;
+  padding: 20px;
+  border: 1px solid #CCC;
+  width: 400px;
+  border-radius: 0 0 6px 6px;
+  height: 70px;
+  background: #FFF;
+  margin-left: -210px;
+  box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.5);
+  -webkit-transition: top 0.5s ease-out;  /* Chrome 1-25, Safari 3.2+ */
+     -moz-transition: top 0.5s ease-out;  /* Firefox 4-15 */
+       -o-transition: top 0.5s ease-out;  /* Opera 10.50–12.00 */
+          transition: top 0.5s ease-out;  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+}
+.kommitter .kommit-view.active {
+  top: 0;
+}
+.kommitter .buttons-container {
+  margin-top: 10px;
+  text-align: right;
+}
