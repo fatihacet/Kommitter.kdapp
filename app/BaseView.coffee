@@ -51,9 +51,10 @@ class BaseView extends JView
     @on "ShowDiff", (diff) =>
       @fileDiffView.emit "ShowDiff", diff
     
-    @on "kommitted", =>
-      @kommitView.emit "KommitDone"
-      @statusList.emit "KommitDone"
+    @on "Kommitted", (staged) =>
+      @kommitView.emit   "KommitDone"
+      @statusList.emit   "KommitDone", staged
+      @fileDiffView.emit "KommitDone"
       
     @on "ShowKommitDialog", =>
       @kommitView.setActive()
