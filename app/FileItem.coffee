@@ -6,28 +6,42 @@ class FileItem extends KDListItemView
     
     super options
     
-    @type     = @getOptions().type
-    @path     = @getOptions().path
-    @isStaged = @type == "added"
+    {@type, @path} = @getOptions()
+    @isStaged      = @type == "added"
     
-  
-  getIcon: (type) ->
-    """
-      <div class="kommitter-icon kommitter-icon-#{type}"></div>
-    """
-  
-  
-  getStagedStatus: ->
-    @isStaged
+    @createElements()
     
+    @on "stage", ->
+      log "staged"
+    
+    @on "unstage", ->
+      log "unstaged"
+    
+  getStagedStatus: -> @isStaged
   
-  partial: -> "#{ @getIcon @getOptions().type}#{ @getOptions().path}"
+  createElements: ->
+    @checkbox  = new KDInputView
+      type     : "checkbox"
+      click    : => 
+        @isStaged = !@isStaged
+        @getDelegate().emit "StageOrUnstage", @
+      
+    @icon      = new KDView
+      cssClass : "kommitter-icon kommitter-icon-#{@getOptions().type}"
+    
+    @name      = new KDView
+      partial  : @getOptions().path
+      click    : => 
+        @getDelegate().emit "Diff", @path
+    
+    @checkbox.getDomElement().removeAttr "checked" unless @getStagedStatus()
   
+  viewAppended: ->
+    @setTemplate @pistachio()
   
-  click: (e) =>
-    if $(e.target).hasClass 'kommitter-icon'
-      @isStaged = !@isStaged
-      @getDelegate().emit "stageOrUnstage", @
-    else 
-      @getDelegate().emit "diff", @path
-  
+  pistachio: -> 
+    """
+      {{> @checkbox}}
+      {{> @icon}}
+      {{> @name}}
+    """
