@@ -25,13 +25,22 @@ class StatusList extends JView
     for fileList of files
       for file in files[fileList]
         do (file) =>
-          item       = new FileItem
-            delegate : @getDelegate()
-            path     : file
-            type     : fileList # TODO: naming confusion
-            
-          @container.addSubView item
+          @createFileItem file, fileList
         
+  createFileItem: (path, type) ->
+    item       = new FileItem {
+      delegate : @getDelegate()
+      path
+      type
+    }
+      
+    item.on "click", => 
+      item.setClass "selected" 
+      @selectedItem?.unsetClass "selected"
+      @selectedItem = item
+      
+    @container.addSubView item
+  
   pistachio: -> 
     """
       {{> @header}}
