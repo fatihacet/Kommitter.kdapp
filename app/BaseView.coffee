@@ -59,6 +59,15 @@ class BaseView extends JView
     @on "ShowKommitDialog", =>
       @kommitView.setActive()
       
+    @on "NoRepoSelected", =>
+      @notify "Easy! Select a repo first!", 2000, "error"
+      
+    @on "NotImplementedYet", =>
+      @notify "This feature is not implemented yet. Stay tuned!", 2000, "info"
+      
+    @on "Exit", =>
+      kodingAppManager.quit appManager.getFrontApp()
+      
   initialize: ->
     @kommitter = new Kommitter
       delegate: @
@@ -81,6 +90,9 @@ class BaseView extends JView
     
   updateStatusList: (files) ->
     @statusTab.addSubView @statusList = new StatusList { delegate: @ }, files
+    
+  isARepoSelected: ->
+    return @kommitter
           
   createRepoTabView: ->
     @repoTabView    = new KDTabView
@@ -107,6 +119,15 @@ class BaseView extends JView
       partial       : "Browse feature will be added soon!"
       
     @repoTabView.showPaneByIndex 0
+    
+  notify: (title, duration = 2000, cssClass = "success", type = "mini") ->
+    return unless title
+    new KDNotificationView {
+      type
+      title
+      duration
+      cssClass
+    }
     
   viewAppended: ->
     super
