@@ -8,6 +8,7 @@ class BaseView extends JView
     
     @container      = new KDView         cssClass : "kommitter-base-container"
     @reposView      = new ReposView      delegate : @
+    @kommitView     = new KommitView     delegate : @
     @navigationPane = new NavigationPane delegate : @
     @fileDiffView   = new FileDiffView   delegate : @, ace : @getOptions().ace
     
@@ -16,33 +17,39 @@ class BaseView extends JView
     @mainStage      = new KDSplitView
       cssClass      : "main-stage"
       type          : "horizontal"
-      resizable     : yes
-      sizes         : [ "30%", "70%" ]
+      resizable     : no
+      sizes         : [ "30%", null ]
       views         : [ @repoTabView, @fileDiffView ]
     
     @container.addSubView @baseView = new KDSplitView
       cssClass      : "base-view"
       type          : "vertical"
-      resizable     : yes
-      sizes         : [ "25%", null ]
+      resizable     : no
+      sizes         : [ "15%", null ]
       views         : [ @navigationPane, @mainStage ]
     
     @on "status", (res) =>
       @navigationPane.emit "UpdateBranchList", res.branch[0]
       delete res.branch
-      @updateWorkingDir res
+      @updateStatusList res
+      
+    @on "Kommit", (message) =>
+      @kommit message
     
     @on "updateStatus", (res) =>
       @removeLeftPanelSubViews()
-      @updateWorkingDir res
+      @updateStatusList res
     
-    @on "stageOrUnstage", (item) =>
+    @on "StageOrUnstage", (item) =>
       eventName = if item.getStagedStatus() then "stage" else "unstage"
-      @[eventName] item
+      item.emit eventName
       @kommitter.emit eventName, item
     
-    @on "diff", (path) =>
-      @kommitter.emit "diff", path
+    @on "Diff", (path) =>
+      @kommitter.emit "Diff", path
+      
+    @on "ShowDiff", (diff) =>
+      @fileDiffView.emit "ShowDiff", diff
     
     @on "kommitted", =>
       @stagedFilesView.destroySubViews()
@@ -57,34 +64,8 @@ class BaseView extends JView
     @reposView.$().css "top", -height
     @container.$().css "top", -height
 
-  stage: (item) ->
-    @workingDirView.removeSubView item
-    initialType = item.getOptions().type
-    newItem     = new FileItem
-      delegate  : @
-      path      : item.getOptions().path
-      type      : "added"
-      oldType   : initialType
-      
-    @stagedFilesView.addSubView newItem
-    
-  unstage: (item) ->
-    @stagedFilesView.removeSubView item
-    newItem     = new FileItem
-      delegate  : @
-      path      : item.getOptions().path
-      type      : item.getOptions().oldType
-      
-    @workingDirView.addSubView newItem
-    
-  commit: ->
-    if @kommitMessageTextarea.getValue() isnt ""
-      @kommitter.emit "commit", FSHelper.escapeFilePath @kommitMessageTextarea.getValue()
-    else 
-      new KDNotificationView
-        title    : "Commit message cannot be empty."
-        cssClass : "error"
-        type     : "mini"
+  kommit: (message) ->
+    @kommitter.emit "kommit", FSHelper.escapeFilePath message
     
   push: ->
     @kommitter.emit "push"
@@ -94,17 +75,8 @@ class BaseView extends JView
     @stagedFilesView.destroySubViews()
     @kommitter.emit "refresh"
     
-  updateWorkingDir: (files) =>
-    for fileList of files
-      for file in files[fileList]
-        do (file) =>
-          item       = new FileItem
-            delegate : @
-            path     : file
-            type     : fileList # TODO: naming confusion
-            
-          target =  if fileList == "added" then @stagedFilesView else @workingDirView
-          target.addSubView item
+  updateStatusList: (files) ->
+    @statusTab.addSubView new StatusList { delegate: @ }, files
           
   createRepoTabView: ->
     @repoTabView    = new KDTabView
@@ -112,11 +84,11 @@ class BaseView extends JView
       height        : "auto"
       hideHandleCloseIcons : yes
       
-    @repoTabView.addPane statusTab = new KDTabPaneView
+    @repoTabView.addPane @statusTab = new KDTabPaneView
       name          : "Status"
       cssClass      : "status-tab"
       
-    @repoTabView.addPane commits   = new KDTabPaneView
+    @repoTabView.addPane commitsTab = new KDTabPaneView
       name          : "Commits"
       cssClass      : "commits-tab"
       partial       : "Commits feature will be added soon!"
@@ -132,4 +104,5 @@ class BaseView extends JView
     """
       {{> @reposView}}
       {{> @container}}
+      {{> @kommitView}}
     """ 
