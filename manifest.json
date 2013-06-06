@@ -39,8 +39,49 @@
   },
   "menu": [
     {
+      "title"     : "Change Repo",
+      "eventName" : "changeRepo"
+    },
+    {
+      "title"     : "Refresh",
+      "eventName" : "refresh"
+    },
+    {
+      "type"     : "separator"
+    },
+    {
+      "title"     : "Pull",
+      "eventName" : "pull"
+    },
+    {
       "title"     : "Kommit",
       "eventName" : "kommit"
+    },
+    {
+      "title"     : "Push",
+      "eventName" : "push"
+    },
+    {
+      "type"     : "separator"
+    },
+    {
+      "title"     : "Save Stash",
+      "eventName" : "saveStash"
+    },
+    {
+      "title"     : "Apply Stash",
+      "eventName" : "applyStash"
+    },
+    {
+      "type"     : "separator"
+    },
+    {
+      "title"     : "About",
+      "eventName" : "about"
+    },
+    {
+      "title"     : "Exit",
+      "eventName" : "exit"
     }
   ]
 }
