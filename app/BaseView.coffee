@@ -27,7 +27,7 @@ class BaseView extends JView
       resizable     : no
       sizes         : [ "15%", null ]
       views         : [ @navigationPane, @mainStage ]
-    
+      
     @on "status", (res) =>
       @navigationPane.emit "UpdateBranchList", res.branch[0]
       delete res.branch
@@ -59,6 +59,9 @@ class BaseView extends JView
     @on "ShowKommitDialog", =>
       @kommitView.setActive()
       
+    @on "ChangeRepo", =>
+      @slideViews yes
+      
     @on "NoRepoSelected", =>
       @notify "Easy! Select a repo first!", 2000, "error"
       
@@ -68,14 +71,19 @@ class BaseView extends JView
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
       
+    @bindMenuEvents()
+      
   initialize: ->
     @kommitter = new Kommitter
       delegate: @
     , @getData()
     
-    height = @getHeight()
-    @reposView.$().css "top", -height
-    @container.$().css "top", -height
+    @slideViews no
+    
+  slideViews: (showReposView) ->
+    height = if showReposView then 0 else -@getHeight()
+    @reposView.$().css "top", height
+    @container.$().css "top", height
 
   kommit: (message) ->
     @kommitter.emit "kommit", FSHelper.escapeFilePath message
@@ -133,6 +141,28 @@ class BaseView extends JView
     super
     @utils.wait 3000, =>
       @kommitView.show() # to make a smooth animation, it will be unvisible.
+      
+  bindMenuEvents: ->
+    eventNameMap = 
+      changeRepo : "ChangeRepo"
+      refresh    : "Refresh"
+      pull       : "NotImplementedYet"
+      kommit     : "ShowKommitDialog"
+      push       : "NotImplementedYet"
+      saveStash  : "NotImplementedYet"
+      applyStash : "NotImplementedYet"
+      about      : "ShowAbout"
+      exit       : "Exit"
+    
+    for eventKey, eventName of eventNameMap
+      do (eventKey, eventName) => 
+        appView.on "#{eventKey}MenuItemClicked", (menuItem) =>
+          isRepoSelected = @isARepoSelected()
+          isRepoRequired = not (menuItem is "exit" or menuItem is "about")
+          if not isRepoSelected and isRepoRequired
+            return @emit "NoRepoSelected" 
+          @emit eventName
+
     
   pistachio: ->
     """
