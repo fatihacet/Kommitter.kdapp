@@ -30,6 +30,7 @@ class FileItem extends KDListItemView
       cssClass : "kommitter-icon kommitter-icon-#{@getOptions().type}"
     
     @name      = new KDView
+      cssClass : "file-name"
       partial  : @getOptions().path
       click    : => 
         @getDelegate().emit "Diff", @path
