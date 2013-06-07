@@ -76,6 +76,7 @@ class BaseView extends JView
       
     @on "Refresh", =>
       @kommitter.emit "Refresh"
+      @fileDiffView.emit "KommitDone"
     
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
