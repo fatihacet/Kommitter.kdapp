@@ -83,6 +83,13 @@
       "type"     : "separator"
     },
     {
+      "title"     : "Show Terminal",
+      "eventName" : "showTerminal"
+    },
+    {
+      "type"     : "separator"
+    },
+    {
       "title"     : "About",
       "eventName" : "about"
     },
