@@ -18,10 +18,12 @@ class FileDiffView extends JView
     @on "ShowDiff", (diff) =>
       @noDiffView.hide()
       @diffView.show()
-      @diffView.updatePartial diff.replace(/^\+.*$/gm, '<span class=added>$&</span>')
-      .replace(/^-.*$/gm, '<span class=removed>$&</span>')
-      .replace(/^@.*$/gm, '<span class=line-numbers>$&</span>')
-      .replace(/^([iI]ndex:?|diff --git) .*$/gim, '<span class=filename>$&</span>')
+      @diffView.updatePartial diff.replace(/\>/g, "&gt;")
+                                  .replace(/\</g, "&lt;")
+                                  .replace(/^\+.*$/gm, '<span class=added>$&</span>')
+                                  .replace(/^-.*$/gm, '<span class=removed>$&</span>')
+                                  .replace(/^@.*$/gm, '<span class=line-numbers>$&</span>')
+                                  .replace(/^([iI]ndex:?|diff --git) .*$/gim, '<span class=filename>$&</span>')
       
     @on "KommitDone", =>
       @diffView.updatePartial ""
