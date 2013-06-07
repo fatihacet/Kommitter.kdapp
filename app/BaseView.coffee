@@ -63,6 +63,8 @@ class BaseView extends JView
       @fileDiffView.emit "KommitDone"
       
     @on "ShowKommitDialog", =>
+      if @kommitter.staged.length is 0
+        return @notify "Stage a file to commit", 4000, "error" 
       @kommitView.setActive()
       
     @on "ChangeRepo", =>
