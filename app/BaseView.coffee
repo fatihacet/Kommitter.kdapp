@@ -69,6 +69,8 @@ class BaseView extends JView
       
     @on "ChangeRepo", =>
       @slideViews yes
+      @statusList.destroySubViews()
+      @fileDiffView.emit "KommitDone"
       
     @on "NoRepoSelected", =>
       @notify "Easy! Select a repo first!", 2000, "error"
