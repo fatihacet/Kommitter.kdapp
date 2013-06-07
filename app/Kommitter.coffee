@@ -54,7 +54,7 @@ class Kommitter extends KDObject
           else
             @kiteNotify()
         else
-          @notify "Pushed successfully!", 3000, "success"
+          @getDelegate().notify "Pushed successfully!", 3000, "success"
         
     @on "Refresh", =>
       @statusObj = @getNewStatusObj()
