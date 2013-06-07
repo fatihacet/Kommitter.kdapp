@@ -23,6 +23,7 @@
           "./app/FileDiffView.coffee",
           "./app/LogItem.coffee",
           "./app/LogView.coffee",
+          "./app/TerminalView.coffee",
           "./app/Kommitter.coffee",
           "./app/BaseView.coffee",
           "./index.coffee"
