@@ -79,17 +79,19 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 .kommitter-repo-item img { 
-  width: 96px; 
+  width: 96px;
   float: left; 
   margin-right: 10px;
 }
-.kommitter-repo-name { 
+.kommitter-repo-name,
+.kommitter .user-details { 
   font-size: 16px;
   font-weight: bold;
   display: block;
   margin: 5px;
 }
-.kommitter-repo-path { 
+.kommitter-repo-path, 
+.kommiter .user-email{ 
   font-size: 13px;
   font-style: italic;
   color: #777;
@@ -175,9 +177,9 @@
   font-weight: 12px;
   margin-top: 2px;
 }
-.kommitter .commits .kdview, 
 .kommitter .browse  .kdview,
-.kommitter .no-diff-view {
+.kommitter .no-diff-view,
+.kommitter .working-dir-clean {
   width: 360px;
   height: 26px;
   line-height: 26px;
@@ -295,4 +297,88 @@
 .kommitter .buttons-container {
   margin-top: 10px;
   text-align: right;
+}
+.kommitter .log-container { 
+  overflow: auto;
+}
+.kommitter .kommit-log-item {
+  border: 1px solid #CCC;
+  height: 86px;
+  padding: 5px;
+  margin: 5px 0 5px 10px;
+  border-radius: 6px;
+  width: auto;
+  text-shadow: 1px 1px 0px #FFF;
+  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.1);
+  background: rgb(247,247,247); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(247,247,247,1) 0%, rgba(225,225,225,1) 100%, rgba(234,234,234,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(247,247,247,1)), color-stop(100%,rgba(225,225,225,1)), color-stop(100%,rgba(234,234,234,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(225,225,225,1) 100%,rgba(234,234,234,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(225,225,225,1) 100%,rgba(234,234,234,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(247,247,247,1) 0%,rgba(225,225,225,1) 100%,rgba(234,234,234,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(247,247,247,1) 0%,rgba(225,225,225,1) 100%,rgba(234,234,234,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
+}
+.kommitter .kommit-log-item:hover {
+  background: rgb(249,249,249); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(249,249,249,1) 0%, rgba(242,242,242,1) 100%, rgba(234,234,234,1) 100%, rgba(249,249,249,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(249,249,249,1)), color-stop(100%,rgba(242,242,242,1)), color-stop(100%,rgba(234,234,234,1)), color-stop(100%,rgba(249,249,249,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(242,242,242,1) 100%,rgba(234,234,234,1) 100%,rgba(249,249,249,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(242,242,242,1) 100%,rgba(234,234,234,1) 100%,rgba(249,249,249,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(249,249,249,1) 0%,rgba(242,242,242,1) 100%,rgba(234,234,234,1) 100%,rgba(249,249,249,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(249,249,249,1) 0%,rgba(242,242,242,1) 100%,rgba(234,234,234,1) 100%,rgba(249,249,249,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+  box-shadow: none;
+}
+.kommitter .kommit-log-item img {
+  border-radius: 4px;
+  float: left;
+  margin-right: 5px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  width: 86px;
+  height: 86px;
+}
+.kommitter .kommit-log-item .user-details {
+  height: 20px;
+  line-height: 20px;
+  width: 400px;
+  float: left;
+}
+.kommitter .kommit-log-item .user-email {
+  display: inline;
+  margin-left: 5px;
+  font-size: 12px;
+  color: #777;
+}
+.kommitter .id {
+  width: 80px;
+  height: 20px;
+  line-height: 20px;
+  position: absolute;
+  right: 20px;
+  text-align: right;
+  top: 10px;
+}
+.kommitter .date {
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+}
+.kommitter .message {
+  margin:  30px 0 0 97px;
+  width: 60%;
+}
+.kommitter .commits .canvas-loader {
+  margin-top: 5px;
+  text-align: center;
+}
+.kommitter .commits .kdloader {
+  width: 124px !important;
+  height: 80px !important;
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+  left: 50%;
+  margin-left: -70px;
+  top: 80px;
 }
