@@ -13,9 +13,16 @@ class TerminalView extends JView
     @terminal.on "WebTermConnected", (@remote)=>
       {command} = @getOptions()
       @runCommand command if command
-      @setClass "active"
+      @setActive()
+      
+  setActive: ->
+    @setClass "active"
+    windowController.addLayer @
+    @once "ReceivedClickElsewhere", =>
+      @unsetClass "active"
       
   runCommand: (command) ->
+    @setActive()
     return unless command 
     return @remote.input "#{command}\n" if @remote
     
