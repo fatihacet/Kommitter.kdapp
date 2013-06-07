@@ -45,9 +45,14 @@ class Kommitter extends KDObject
         @delegate.emit "Kommitted", @staged
         @staged.length = 0
       
-    @on "push", =>
-      @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
-        # handle response
+    @on "Push", =>
+      kiteController.run "cd #{@repoPath} ; git push", (err, res) =>
+        if err
+          return @kiteNotify() unless res
+          if res.indexOf("Permission denied (publickey)") > -1
+            @showPublicKeyWarning()
+          else
+            log "i guess pushed"
         
     @on "Refresh", =>
       @statusObj = @getNewStatusObj()
@@ -95,13 +100,37 @@ class Kommitter extends KDObject
           @statusObj[key].push result.split(currentKey)[1]
 
   doKiteRequest: (command, callback) ->
-    KD.getSingleton('kiteController').run command, (err, res) =>
+    kiteController.run command, (err, res) =>
       unless err
         callback(res) if callback
       else 
-        new KDNotificationView
-          title    : "An error occured while processing your request, please try again!",
-          type     : "mini"
-          cssClass : "error"
-          duration : 3000
+        @kiteNotify()
+        
+  showPublicKeyWarning: ->
+    modal      = new KDModalView
+      title    : "Access Denied"
+      cssClass : "access-denied-modal"
+      overlay  : yes
+      width    : 400 
+      content  : 
+        """
+          <p>It seems like your ssh key is password protected.
+          Kommitter app cannot work with password protected keys.</p>
+          <p>You can push manually or click "Open Terminal" button to enter your password to push.</p>
+        """
+      buttons  :
+        "Open Terminal" :
+          style         : "modal-clean-green"
+          callback      : => 
+            @getDelegate().sendCommandToTerminal "cd #{@repoPath} ; git push"
+            modal.destroy()
+        "Close"         :
+          style         : "modal-clean-gray"
+          callback      : -> modal.destroy()
   
+  kiteNotify: ->
+    new KDNotificationView
+      title    : "An error occured while processing your request, please try again!",
+      type     : "mini"
+      cssClass : "error"
+      duration : 3000

@@ -77,6 +77,9 @@ class BaseView extends JView
     @on "Refresh", =>
       @kommitter.emit "Refresh"
       @fileDiffView.emit "KommitDone"
+      
+    @on "Push", =>
+      @kommitter.emit "Push"
     
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
@@ -103,10 +106,7 @@ class BaseView extends JView
 
   kommit: (message) ->
     @kommitter.emit "kommit", FSHelper.escapeFilePath message
-    
-  push: ->
-    @kommitter.emit "push"
-    
+      
   refresh: ->
     @workingDirView.destroySubViews()
     @stagedFilesView.destroySubViews()
@@ -155,6 +155,10 @@ class BaseView extends JView
       cssClass
     }
     
+  sendCommandToTerminal: (command) ->
+    return @addSubView @terminal = new TerminalView { command } unless @terminal
+    @terminal.runCommand command
+    
   viewAppended: ->
     super
     @utils.wait 3000, =>
@@ -166,7 +170,7 @@ class BaseView extends JView
       refresh    : "Refresh"
       pull       : "NotImplementedYet"
       kommit     : "ShowKommitDialog"
-      push       : "NotImplementedYet"
+      push       : "Push"
       ignore     : "IgnoreChanges"
       saveStash  : "NotImplementedYet"
       applyStash : "NotImplementedYet"
@@ -182,7 +186,6 @@ class BaseView extends JView
             return @emit "NoRepoSelected" 
           @emit eventName
 
-    
   pistachio: ->
     """
       {{> @reposView}}
