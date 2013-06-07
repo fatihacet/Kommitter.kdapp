@@ -28,7 +28,7 @@ class BaseView extends JView
       sizes         : [ "15%", null ]
       views         : [ @navigationPane, @mainStage ]
       
-    @on "status", (res) =>
+    @on "Status", (res) =>
       @navigationPane.emit "UpdateBranchList", res.branch[0]
       delete res.branch
       @updateStatusList res
@@ -74,6 +74,9 @@ class BaseView extends JView
     @on "NotImplementedYet", =>
       @notify "This feature is not implemented yet. Stay tuned!", 2000, "info"
       
+    @on "Refresh", =>
+      @kommitter.emit "Refresh"
+    
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
       
@@ -109,6 +112,7 @@ class BaseView extends JView
     @kommitter.emit "refresh"
     
   updateStatusList: (files) ->
+    @statusTab.destroySubViews()
     @statusTab.addSubView @statusList = new StatusList { delegate: @ }, files
     
   isARepoSelected: ->

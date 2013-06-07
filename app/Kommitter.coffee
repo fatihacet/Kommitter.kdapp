@@ -49,9 +49,8 @@ class Kommitter extends KDObject
       @doKiteRequest "cd #{@repoPath} ; git push", (res) =>
         # handle response
         
-    @on "refresh", =>
+    @on "Refresh", =>
       @statusObj = @getNewStatusObj()
-      @aceEditor?.getSession().setValue ""
       @getStatus()
       
     @on "FetchLog", =>
@@ -69,7 +68,7 @@ class Kommitter extends KDObject
   getStatus: =>
     @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath.replace "./", ""} ; git branch ; git status -s", (res) =>
       @parseOutput res
-      @getDelegate().emit "status", @statusObj
+      @getDelegate().emit "Status", @statusObj
       
   fetchLog: ->
     command = """git log --pretty=format:'{ "id": "%H", "name": "%an", "email": "%ae", "date": "%ad", "message": "%s"}' --max-count=20"""
