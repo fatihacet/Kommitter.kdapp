@@ -15,7 +15,7 @@ class FileDiffView extends JView
       
     @diffView.hide()
       
-    @on "ShowDiff", (diff) =>
+    @on "ShowDiff", (diff, shouldHilite) =>
       @noDiffView.hide()
       @diffView.show()
       @diffView.updatePartial diff.replace(/\>/g, "&gt;")
@@ -24,6 +24,8 @@ class FileDiffView extends JView
                                   .replace(/^-.*$/gm, '<span class=removed>$&</span>')
                                   .replace(/^@.*$/gm, '<span class=line-numbers>$&</span>')
                                   .replace(/^([iI]ndex:?|diff --git) .*$/gim, '<span class=filename>$&</span>')
+                                  
+      hljs.highlightBlock @diffView.getDomElement()[0] if shouldHilite
       
     @on "KommitDone", =>
       @diffView.updatePartial ""

@@ -55,7 +55,7 @@ class BaseView extends JView
       @kommitter.emit "GetFileContent", path
       
     @on "ShowFileContent", (content) =>
-      @fileDiffView.emit "ShowDiff", content
+      @fileDiffView.emit "ShowDiff", content, yes
     
     @on "Kommitted", (staged) =>
       @kommitView.emit   "KommitDone"
