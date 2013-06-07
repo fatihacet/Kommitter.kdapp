@@ -49,7 +49,7 @@ class Kommitter extends KDObject
       @getStatus()
         
     @getStatus()
-  
+    
   getNewStatusObj : ->
     branch        : []
     modified      : []
@@ -61,6 +61,13 @@ class Kommitter extends KDObject
     @doKiteRequest "cd #{FSHelper.escapeFilePath @repoPath.replace "./", ""} ; git branch ; git status -s", (res) =>
       @parseOutput res
       @getDelegate().emit "status", @statusObj
+      
+  fetchLog: ->
+    command = """git log --pretty=format:'{ "id": "%H", "name": "%an", "email": "%ae", "date": "%ad", "message": "%s"}' --max-count=20"""
+    @doKiteRequest "cd #{@repoPath} ; #{command}", (res) =>
+      parsed = res.split("\n").join(",")
+      gitLog = JSON.parse "[#{parsed}]"
+      @getDelegate().emit "GitLogFetched", gitLog
       
   statusKeys  : 
     branch    : "* "
