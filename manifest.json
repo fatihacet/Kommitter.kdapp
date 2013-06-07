@@ -21,6 +21,8 @@
           "./app/KommitView.coffee",
           "./app/NavigationPane.coffee",
           "./app/FileDiffView.coffee",
+          "./app/LogItem.coffee",
+          "./app/LogView.coffee",
           "./app/Kommitter.coffee",
           "./app/BaseView.coffee",
           "./index.coffee"
