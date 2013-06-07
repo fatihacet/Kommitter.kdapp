@@ -71,6 +71,9 @@ class BaseView extends JView
       @slideViews yes
       @statusList.destroySubViews()
       @fileDiffView.emit "KommitDone"
+      {repoTabView} = @
+      repoTabView.getPaneByName("Commits").destroySubViews()
+      repoTabView.showPaneByIndex 0
       
     @on "NoRepoSelected", =>
       @notify "Easy! Select a repo first!", 2000, "error"
