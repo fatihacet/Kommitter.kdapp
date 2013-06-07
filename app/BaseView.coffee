@@ -84,6 +84,9 @@ class BaseView extends JView
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
       
+    @on "ShowTerminal", =>
+      @sendCommandToTerminal if @terminal then "" else "cd #{@kommitter.repoPath}"
+      
     @on "FetchLog", => 
       @kommitter.fetchLog()
       
@@ -165,17 +168,18 @@ class BaseView extends JView
       @kommitView.show() # to make a smooth animation, it will be unvisible.
       
   bindMenuEvents: ->
-    eventNameMap = 
-      changeRepo : "ChangeRepo"
-      refresh    : "Refresh"
-      pull       : "NotImplementedYet"
-      kommit     : "ShowKommitDialog"
-      push       : "Push"
-      ignore     : "IgnoreChanges"
-      saveStash  : "NotImplementedYet"
-      applyStash : "NotImplementedYet"
-      about      : "ShowAbout"
-      exit       : "Exit"
+    eventNameMap   = 
+      changeRepo   : "ChangeRepo"
+      refresh      : "Refresh"
+      pull         : "NotImplementedYet"
+      kommit       : "ShowKommitDialog"
+      push         : "Push"
+      ignore       : "IgnoreChanges"
+      saveStash    : "NotImplementedYet"
+      applyStash   : "NotImplementedYet"
+      about        : "ShowAbout"
+      showTerminal : "ShowTerminal"
+      exit         : "Exit"
     
     for eventKey, eventName of eventNameMap
       do (eventKey, eventName) => 
