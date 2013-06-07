@@ -16,7 +16,7 @@ class FileItem extends KDListItemView
   createElements: ->
     @checkbox  = new KDInputView
       type     : "checkbox"
-      click    : => 
+      click    : =>
         @isStaged = !@isStaged
         @getDelegate().emit "StageOrUnstage", @
       

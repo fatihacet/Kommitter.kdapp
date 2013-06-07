@@ -47,6 +47,7 @@ class StatusList extends JView
     }
       
     item.on "click", => 
+      return if @selectedItem is item
       item.setClass "selected" 
       @selectedItem?.unsetClass "selected"
       @selectedItem = item
