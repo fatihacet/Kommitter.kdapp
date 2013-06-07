@@ -18,6 +18,12 @@ class Kommitter extends KDObject
       @doKiteRequest "cd #{@repoPath} ; git diff #{path}", (res) =>
         @getDelegate().emit "ShowDiff", res
         
+    @on "GetFileContent", (path) =>
+      file = FSHelper.createFileFromPath """#{@repoPath}#{path.replace /^ /, ""}"""
+      file.fetchContents (err, res) =>
+        return if err
+        @getDelegate().emit "ShowFileContent", res
+        
     @on "kommit", (message) =>
       commitedFiles = @staged.join " "
       if commitedFiles.length is 0
@@ -50,7 +56,7 @@ class Kommitter extends KDObject
       
     @on "FetchLog", =>
       @fetchLog()
-        
+      
     @getStatus()
     
   getNewStatusObj : ->

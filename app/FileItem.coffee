@@ -27,7 +27,8 @@ class FileItem extends KDListItemView
       cssClass : "file-name"
       partial  : @getOptions().path
       click    : => 
-        @getDelegate().emit "Diff", @path
+        if @type is "untracked" then @getDelegate().emit "GetFileContent", @path
+        else @getDelegate().emit "Diff", @path
     
     @checkbox.getDomElement().removeAttr "checked" unless @getStagedStatus()
   
