@@ -8,8 +8,11 @@ class LogItem extends JView
     
     @avatar      = new KDCustomHTMLView
       tagName    : "img"
+      bind       : "error"
       attributes : 
-        src      : "https://gravatar.com/avatar/#{md5.digest data.email}?s=86"
+        src      : "https://gravatar.com/avatar/#{md5.digest data.email}?s=50"
+      error     : =>
+        @avatar.getDomElement().attr "src", "http://www.gravatar.com/avatar/?d=mm&s=50"
   
   pistachio: ->
     data = @getData()
@@ -19,5 +22,5 @@ class LogItem extends JView
       <div class="user-details">#{data.name}<span class="user-email">#{data.email}</span></div>
       <div class="date">{{> @age}}</div>
       <div class="message">#{data.message}</div>
-      <div class="id">#{data.id.substring 0, 7}</div>
+      <div class="id">#{data.id}</div>
     """

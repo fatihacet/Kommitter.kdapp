@@ -71,7 +71,7 @@ class Kommitter extends KDObject
       @getDelegate().emit "Status", @statusObj
       
   fetchLog: ->
-    command = """git log --pretty=format:'{ "id": "%H", "name": "%an", "email": "%ae", "date": "%ad", "message": "%s"}' --max-count=20"""
+    command = """git log --pretty=format:'{ "id": "%h", "name": "%an", "email": "%ae", "date": "%ad", "message": "%s"}' --max-count=20"""
     @doKiteRequest "cd #{@repoPath} ; #{command}", (res) =>
       parsed = res.split("\n").join(",")
       gitLog = JSON.parse "[#{parsed}]"
