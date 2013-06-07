@@ -47,6 +47,9 @@ class Kommitter extends KDObject
       @statusObj = @getNewStatusObj()
       @aceEditor?.getSession().setValue ""
       @getStatus()
+      
+    @on "FetchLog", =>
+      @fetchLog()
         
     @getStatus()
     
@@ -67,7 +70,7 @@ class Kommitter extends KDObject
     @doKiteRequest "cd #{@repoPath} ; #{command}", (res) =>
       parsed = res.split("\n").join(",")
       gitLog = JSON.parse "[#{parsed}]"
-      @getDelegate().emit "GitLogFetched", gitLog
+      @getDelegate().emit "LogFetched", gitLog
       
   statusKeys  : 
     branch    : "* "

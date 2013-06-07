@@ -71,6 +71,12 @@ class BaseView extends JView
     @on "Exit", =>
       kodingAppManager.quit appManager.getFrontApp()
       
+    @on "FetchLog", => 
+      @kommitter.fetchLog()
+      
+    @on "LogFetched", (log) =>
+      @logView.emit "CreateLogHistory", log
+      
     @bindMenuEvents()
       
   initialize: ->
@@ -116,9 +122,6 @@ class BaseView extends JView
       name          : "Commits"
       cssClass      : "commits-tab"
     
-    commitsTab.addSubView new KDView
-      partial       : "Commits feature will be added soon!"
-    
     @repoTabView.addPane browseTab = new KDTabPaneView
       name          : "Browse"
       cssClass      : "browse-tab"
@@ -127,6 +130,10 @@ class BaseView extends JView
       partial       : "Browse feature will be added soon!"
       
     @repoTabView.showPaneByIndex 0
+    
+    @repoTabView.on "PaneDidShow", (pane) =>
+      if pane.getOptions().name is "Commits" and pane.getSubViews().length is 0
+        commitsTab.addSubView @logView = new LogView delegate: @
     
   notify: (title, duration = 2000, cssClass = "success", type = "mini") ->
     return unless title
