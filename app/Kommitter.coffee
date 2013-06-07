@@ -52,7 +52,9 @@ class Kommitter extends KDObject
           if res.indexOf("Permission denied (publickey)") > -1
             @showPublicKeyWarning()
           else
-            log "i guess pushed"
+            @kiteNotify()
+        else
+          @notify "Pushed successfully!", 3000, "success"
         
     @on "Refresh", =>
       @statusObj = @getNewStatusObj()
