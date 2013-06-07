@@ -3,7 +3,7 @@ KD.enableLogs()
 kodingAppsController = KD.getSingleton "kodingAppsController"
 kiteController       = KD.getSingleton "kiteController"
 kodingAppManager     = KD.getSingleton "appManager"
-
+windowController     = KD.getSingleton "windowController"
 
 #TEMP FIX FOR STYLING
 $("#k-link").remove()
