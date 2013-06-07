@@ -89,7 +89,10 @@ class BaseView extends JView
       kodingAppManager.quit appManager.getFrontApp()
       
     @on "ShowTerminal", =>
-      @sendCommandToTerminal if @terminal then "" else "cd #{@kommitter.repoPath}"
+      {repoPath}    = @kommitter
+      isSameRepo    = repoPath is @lastRepoPath
+      @lastRepoPath = repoPath
+      @sendCommandToTerminal if @terminal and isSameRepo then "" else "cd ~/#{@lastRepoPath}"
       
     @on "FetchLog", => 
       @kommitter.fetchLog()
