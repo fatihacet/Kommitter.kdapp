@@ -16,7 +16,7 @@ class KommitView extends JView
       callback    : @bound "kommit"
       
     @cancelButton = new KDButtonView
-      cssClass    : "editor-button"
+      cssClass    : "modal-cancel"
       title       : "Cancel"
       callback    : @bound "unsetActive"
       
