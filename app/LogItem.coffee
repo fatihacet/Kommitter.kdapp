@@ -13,6 +13,8 @@ class LogItem extends JView
         src      : "https://gravatar.com/avatar/#{md5.digest data.email}?s=50"
       error     : =>
         @avatar.getDomElement().attr "src", "http://www.gravatar.com/avatar/?d=mm&s=50"
+        
+    @on "click", => @emit "LogItemClicked"
   
   pistachio: ->
     data = @getData()

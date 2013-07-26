@@ -28,7 +28,12 @@ class LogView extends JView
       @loadMore.show()
       
   createItems: (log) ->
-    @container.addSubView new LogItem {}, kommit for kommit in log
+    log.forEach (kommit) =>
+      logItem = new LogItem {}, kommit
+      logItem.on "LogItemClicked", =>
+        @getDelegate().emit "Diff", logItem.getData().id, yes
+      
+      @container.addSubView logItem
     
   viewAppended: ->
     super
