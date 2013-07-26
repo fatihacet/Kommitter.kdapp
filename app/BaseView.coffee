@@ -45,8 +45,8 @@ class BaseView extends JView
       item.emit eventName
       @kommitter.emit eventName, item
     
-    @on "Diff", (path) =>
-      @kommitter.emit "Diff", path
+    @on "Diff", (path, isHash = no) =>
+      @kommitter.emit "Diff", path, isHash
       
     @on "ShowDiff", (diff) =>
       @fileDiffView.emit "ShowDiff", diff
