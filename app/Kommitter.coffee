@@ -14,8 +14,9 @@ class Kommitter extends KDObject
     @on "unstage", (item) =>
       @staged.splice @staged.indexOf(item.getOptions().path), 1
       
-    @on "Diff", (path) =>
-      @doKiteRequest "cd #{@repoPath} ; git diff #{path}", (res) =>
+    @on "Diff", (meta, isHash) =>
+      meta = "#{meta}^!"  if isHash
+      @doKiteRequest "cd #{@repoPath} ; git diff #{meta}", (res) =>
         @getDelegate().emit "ShowDiff", res
         
     @on "GetFileContent", (path) =>
@@ -85,22 +86,21 @@ class Kommitter extends KDObject
       @getDelegate().emit "LogFetched", gitLog
       
   statusKeys  : 
-    branch    : "* "
-    modified  : " M"
-    added     : "A "
-    deleted   : " D"
-    untracked : "??"
+    "* " : "branch"
+    " M" : "modified"
+    "A " : "added"
+    " D" : "deleted"
+    "??" : "untracked"
   
   parseOutput: (res) ->
-    results = res.split "\n"
-    keys    = @statusKeys;
+    lines = res.split "\n"
     
-    for result in results
-      for key of @statusKeys
-        currentKey = @statusKeys[key]
-        if result.indexOf(currentKey) is 0
-          @statusObj[key].push result.split(currentKey)[1]
-
+    for line in lines
+      key   = line.substring 0, 2
+      value = line.substring 2, line.length
+      label = @statusKeys[key]
+      @statusObj[label].push value  if label
+  
   doKiteRequest: (command, callback) ->
     kiteController.run command, (err, res) =>
       unless err
