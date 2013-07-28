@@ -208,21 +208,8 @@
 }
 .kommitter pre {
   padding: 5px 0 0 0;
-}
-.kommitter .removed {
-  background: #fdd;
-  display: inline-block;
-  width: 100%;
-}
-.kommitter .added {
-  background: #ddffdd;
-  display: inline-block;
-  width: 100%;
-}
-.kommitter .filename {
-  background: #F8EEC7;
-  display: inline-block;
-  width: 100%;
+  background: #FFF;
+  border: 1px solid #e5e5e5;
 }
 .kommitter .status-list-container,
 .kommitter .status-tab {
@@ -392,3 +379,25 @@
   z-index: 10000;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
 }
+.kommitter .diff-table {
+  width: 100%;
+}
+.kommitter .diff-table td {
+  padding: 2px 6px;
+  width: 2%;
+  border-right: 1px solid #e5e5e5;
+  color: #999;
+}
+.kommitter .diff-table td:last-child {
+  width: 94%;
+  border-right: none;
+  color: inherit;
+}
+.kommitter .diff-table .chunk-title td { color: #999; background: #F3F3FF !important; }
+.kommitter .diff-table .chunk-title td:last-child { background: #F8F8FF; }
+.kommitter .diff-table .deleted-line td { background: #F7C8C8; }
+.kommitter .diff-table .deleted-line td:last-child { background: #FFDDDD; }
+.kommitter .diff-table .added-line td { background: #CEFFCE; }
+.kommitter .diff-table .added-line td:last-child { background: #DDFFDD; }
+.kommitter .diff-table tr:hover td { background: #F6E8B5; }
+.kommitter .diff-table tr:hover td:last-child { background: #F8EEC7; }
