@@ -16,7 +16,7 @@ class Kommitter extends KDObject
       
     @on "Diff", (meta, isHash) =>
       meta = "#{meta}^!"  if isHash
-      @doKiteRequest "cd #{@repoPath} ; git diff #{meta}", (res) =>
+      @doKiteRequest "cd #{@repoPath} ; git diff --patience #{meta}", (res) =>
         @getDelegate().emit "ShowDiff", res
         
     @on "GetFileContent", (path) =>
