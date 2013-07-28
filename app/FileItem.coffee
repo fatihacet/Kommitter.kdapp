@@ -13,6 +13,12 @@ class FileItem extends KDListItemView
     
   getStagedStatus: -> @isStaged
   
+  typeToLetterMap: 
+    "modified"  : "M"
+    "added"     : "A"
+    "deleted"   : "D"
+    "untracked" : "U"
+    
   createElements: ->
     @checkbox  = new KDInputView
       type     : "checkbox"
@@ -20,8 +26,12 @@ class FileItem extends KDListItemView
         @isStaged = !@isStaged
         @getDelegate().emit "StageOrUnstage", @
       
+    statusType = @getOptions().type
     @icon      = new KDView
-      cssClass : "kommitter-icon kommitter-icon-#{@getOptions().type}"
+      cssClass : "kommitter-icon kommitter-icon-#{statusType}"
+      partial  : @typeToLetterMap[statusType] or ""
+      tooltip  : 
+        title  : statusType.capitalize()
     
     @name      = new KDView
       cssClass : "file-name"
