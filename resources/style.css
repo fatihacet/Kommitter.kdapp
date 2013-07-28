@@ -23,7 +23,12 @@
   margin-right: 28px;
   top: 3px;
   position: relative;
-  border-radius: 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  color: #FFF;
+  text-align: center;
 }
 .kommitter-buttons-view {
   width: 100px;
@@ -99,15 +104,14 @@
 .kommitter-repos-view {
   overflow-y: auto; 
 }
-.kommitter-icon-deleted   { background: red;  }
-.kommitter-icon-untracked { background: gray; }
-.kommitter-icon-modified  { background: blue; }
-.kommitter-icon-added     { background: green; }
+.kommitter-icon-deleted   { background: #d83434; }
+.kommitter-icon-untracked { background: #999999; }
+.kommitter-icon-modified  { background: #018BBF; }
+.kommitter-icon-added     { background: #92c133; }
 
 .status-list-header {
   background-image: -moz-linear-gradient(100% 100% 90deg, #e4e5e7, #f8f8f8) !important;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e4e5e7)) !important;
-  background-image: -khtml-gradient(linear, 0% 0%, 0% 100%, from(#f8f8f8), to(#e4e5e7)) !important;
   background-image: -o-linear-gradient(#f8f8f8, #e4e5e7) !important;
   border-bottom: 1px solid #c5c5c5 !important;
 }
@@ -395,9 +399,9 @@
 }
 .kommitter .diff-table .chunk-title td { color: #999; background: #F3F3FF !important; }
 .kommitter .diff-table .chunk-title td:last-child { background: #F8F8FF; }
-.kommitter .diff-table .deleted-line td { background: #F7C8C8; }
+.kommitter .diff-table .deleted-line td { background: #F7C8C8; border-color: #e9aeae; }
 .kommitter .diff-table .deleted-line td:last-child { background: #FFDDDD; }
-.kommitter .diff-table .added-line td { background: #CEFFCE; }
+.kommitter .diff-table .added-line td { background: #CEFFCE; border-color: #b4e2b4; }
 .kommitter .diff-table .added-line td:last-child { background: #DDFFDD; }
 .kommitter .diff-table tr:hover td { background: #F6E8B5; }
 .kommitter .diff-table tr:hover td:last-child { background: #F8EEC7; }
