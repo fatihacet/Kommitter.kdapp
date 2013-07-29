@@ -88,8 +88,7 @@
   float: left; 
   margin-right: 10px;
 }
-.kommitter-repo-name,
-.kommitter .user-details { 
+.kommitter-repo-name { 
   font-size: 16px;
   font-weight: bold;
   display: block;
@@ -222,23 +221,19 @@
 .kommitter .repo-tabs {
   overflow: hidden;
 }
-.kommitter .main-stage .panel-1 {
-  box-shadow: 0 6px 13px -4px rgba(0, 0, 0, 0.3) inset;
-}
 .kommitter .kdtabhandlecontainer {
   padding-top: 0;
   height: 29px;
 }
 .kommitter .repo-tabs .kdtabhandle {
   border: 1px solid #CCC;
-  border-bottom: none;
   border-radius: 4px 4px 0 0;
   border-left: none;
   padding: 0 25px;
   color: #666;
 }
 .kommitter .repo-tabs .kdtabhandle:hover {
-  height: 29px;
+  height: 28px;
 }
 .kommitter .repo-tabs .kdtabhandle:first-child {
   margin-left: 0;
@@ -293,14 +288,13 @@
   overflow: auto;
 }
 .kommitter .kommit-log-item {
-  border: 1px solid #CCC;
-  height: 86px;
-  padding: 5px;
-  margin: 5px 0 5px 10px;
+  border: 1px solid #DDD;
+  height: auto;
+  padding: 8px;
+  margin: 8px;
   border-radius: 6px;
   width: auto;
-  text-shadow: 1px 1px 0px #FFF;
-  box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 1px rgba(0, 0, 0, .1);
   background: rgb(247,247,247); /* Old browsers */
   background: -moz-linear-gradient(top,  rgba(247,247,247,1) 0%, rgba(225,225,225,1) 100%, rgba(234,234,234,1) 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(247,247,247,1)), color-stop(100%,rgba(225,225,225,1)), color-stop(100%,rgba(234,234,234,1))); /* Chrome,Safari4+ */
@@ -324,16 +318,9 @@
 .kommitter .kommit-log-item img {
   border-radius: 4px;
   float: left;
-  margin-right: 5px;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-  width: 86px;
-  height: 86px;
-}
-.kommitter .kommit-log-item .user-details {
-  height: 20px;
-  line-height: 20px;
-  width: 400px;
-  float: left;
+  margin-right: 10px;
+  width: 36px;
+  height: 36px;
 }
 .kommitter .kommit-log-item .user-email {
   display: inline;
@@ -342,13 +329,11 @@
   color: #777;
 }
 .kommitter .id {
-  width: 80px;
-  height: 20px;
-  line-height: 20px;
   position: absolute;
   right: 20px;
   text-align: right;
-  top: 10px;
+  top: 19px;
+  font-weight: bold;
 }
 .kommitter .date {
   position: absolute;
@@ -356,8 +341,9 @@
   right: 20px;
 }
 .kommitter .message {
-  margin:  30px 0 0 97px;
-  width: 60%;
+  width: 90%;
+  font-size: 14px;
+  font-weight: bold;
 }
 .kommitter .commits .canvas-loader {
   margin-top: 5px;
