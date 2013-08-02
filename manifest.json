@@ -41,61 +41,21 @@
     "128": "./resources/icon.128.png"
   },
   "menu": [
-    {
-      "title"     : "Change Repo",
-      "eventName" : "changeRepo"
-    },
-    {
-      "title"     : "Refresh",
-      "eventName" : "refresh"
-    },
-    {
-      "type"     : "separator"
-    },
-    {
-      "title"     : "Pull",
-      "eventName" : "pull"
-    },
-    {
-      "title"     : "Kommit",
-      "eventName" : "kommit"
-    },
-    {
-      "title"     : "Push",
-      "eventName" : "push"
-    },
-    {
-      "type"     : "separator"
-    },
-    {
-      "title"     : "Save Stash",
-      "eventName" : "saveStash"
-    },
-    {
-      "title"     : "Apply Stash",
-      "eventName" : "applyStash"
-    },
-    {
-      "title"     : "Ignore Changes",
-      "eventName" : "ignore"
-    },
-    {
-      "type"     : "separator"
-    },
-    {
-      "title"     : "Show Terminal",
-      "eventName" : "showTerminal"
-    },
-    {
-      "type"     : "separator"
-    },
-    {
-      "title"     : "About",
-      "eventName" : "about"
-    },
-    {
-      "title"     : "Exit",
-      "eventName" : "exit"
-    }
+    { "title"     : "Change Repo" ,  "eventName" : "changeRepo"      },
+    { "title"     : "Refresh"     ,  "eventName" : "refresh"         },
+    { "type"      : "separator"                                      },
+    { "title"     : "Clone",         "eventName" : "clone"           },
+    { "title"     : "Pull",          "eventName" : "pull"            },
+    { "title"     : "Kommit",        "eventName" : "kommit"          },
+    { "title"     : "Push",          "eventName" : "push"            },
+    { "type"      : "separator"                                      },
+    { "title"     : "Save Stash",     "eventName" : "saveStash"      },
+    { "title"     : "Apply Stash",    "eventName" : "applyStash"     },
+    { "title"     : "Ignore Changes", "eventName" : "ignore"         },
+    { "type"      : "separator"                                      },
+    { "title"     : "Show Terminal",  "eventName" : "showTerminal"   },
+    { "type"      : "separator"                                      },
+    { "title"     : "About",          "eventName" : "about"          },
+    { "title"     : "Exit",           "eventName" : "exit"           }
   ]
 }
