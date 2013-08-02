@@ -18,7 +18,7 @@ class BaseView extends JView
       cssClass      : "main-stage"
       type          : "horizontal"
       resizable     : no
-      sizes         : [ "30%", null ]
+      sizes         : [ "40%", null ]
       views         : [ @repoTabView, @fileDiffView ]
     
     @container.addSubView @baseView = new KDSplitView
@@ -84,6 +84,9 @@ class BaseView extends JView
     @on "Refresh", =>
       @kommitter.emit "Refresh"
       @fileDiffView.emit "KommitDone"
+      
+    @on "Clone", =>
+      new CloneModal delegate: @
       
     @on "Push", =>
       @kommitter.emit "Push"
@@ -181,6 +184,7 @@ class BaseView extends JView
     eventNameMap   = 
       changeRepo   : "ChangeRepo"
       refresh      : "Refresh"
+      clone        : "Clone"
       pull         : "NotImplementedYet"
       kommit       : "ShowKommitDialog"
       push         : "Push"
@@ -195,7 +199,7 @@ class BaseView extends JView
       do (eventKey, eventName) => 
         appView.on "#{eventKey}MenuItemClicked", (menuItem) =>
           isRepoSelected = @isARepoSelected()
-          isRepoRequired = not (menuItem is "exit" or menuItem is "about")
+          isRepoRequired = not (menuItem is "exit" or menuItem is "about" or menuItem is "clone")
           if not isRepoSelected and isRepoRequired
             return @emit "NoRepoSelected" 
           @emit eventName
