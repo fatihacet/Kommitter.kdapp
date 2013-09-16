@@ -22,21 +22,18 @@ class Kommitter extends KDObject
     @on "GetFileContent", (path) =>
       file = FSHelper.createFileFromPath """#{@repoPath}#{path.replace /^ /, ""}"""
       file.fetchContents (err, res) =>
-        return if err
+        return warn err if err
         @getDelegate().emit "ShowFileContent", res
         
     @on "kommit", (message) =>
       commitedFiles = @staged.join " "
       if commitedFiles.length is 0
-        new KDNotificationView
+        return new KDNotificationView
           title    : "No file staged to commit!"
           cssClass : "error"
           type     : "mini"
-        return no
       
-      commitText   = "git commit -m #{message} #{commitedFiles}"
-      
-      @doKiteRequest "cd #{@repoPath} ; #{commitText}", (res) =>
+      @doKiteRequest "cd #{@repoPath} ; git commit -m #{message} #{commitedFiles}", (res) =>
         # TODO: Error check
         new KDNotificationView
           type     : "mini"
@@ -49,8 +46,7 @@ class Kommitter extends KDObject
     @on "Push", =>
       kiteController.run "cd #{@repoPath} ; git push", (err, res) =>
         if err
-          return @kiteNotify() unless res
-          if res.indexOf("Permission denied (publickey)") > -1
+          if res and res.indexOf("Permission denied (publickey)") > -1
             @showPublicKeyWarning()
           else
             @kiteNotify()
@@ -61,10 +57,13 @@ class Kommitter extends KDObject
       @statusObj = @getNewStatusObj()
       @getStatus()
       
-    @on "FetchLog", =>
-      @fetchLog()
-      
+    @on "FetchLog", => @fetchLog()
+    
     @getStatus()
+  
+  @klone: (path, url, callback) ->
+    kiteController.run "cd #{path} ; git clone #{url}", (err, res) =>
+      callback err, res
     
   getNewStatusObj : ->
     branch        : []
@@ -129,6 +128,14 @@ class Kommitter extends KDObject
         "Close"         :
           style         : "modal-clean-gray"
           callback      : -> modal.destroy()
+          
+  generateRepoStats: (container) ->
+    container.destroySubViews()
+    container.addSubView loader = new KDLoaderView
+      size: 
+        width: 36
+    
+    loader.show()
   
   kiteNotify: ->
     new KDNotificationView
