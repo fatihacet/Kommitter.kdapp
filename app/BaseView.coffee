@@ -145,22 +145,30 @@ class BaseView extends JView
       name          : "Status"
       cssClass      : "status-tab"
       
-    @repoTabView.addPane commitsTab = new KDTabPaneView
+    @repoTabView.addPane @commitsTab = new KDTabPaneView
       name          : "Commits"
       cssClass      : "commits-tab"
     
-    @repoTabView.addPane browseTab = new KDTabPaneView
-      name          : "Browse"
-      cssClass      : "browse-tab"
-      
-    browseTab.addSubView new KDView
-      partial       : "Browse feature will be added soon!"
+    @repoTabView.addPane @statsTab = new KDTabPaneView
+      name          : "Stats"
+      cssClass      : "stats-tab"
       
     @repoTabView.showPaneByIndex 0
     
     @repoTabView.on "PaneDidShow", (pane) =>
-      if pane.getOptions().name is "Commits" and pane.getSubViews().length is 0
-        commitsTab.addSubView @logView = new LogView delegate: @
+      paneNameByClass =
+        Commits       :
+          paneClass   : LogView
+          container   : @commitsTab
+          name        : "logView"
+        Stats         : 
+          paneClass   : StatsView
+          container   : @statsTab
+          name        : "statsView"
+      
+      meta = paneNameByClass[pane.getOptions().name]
+      if meta and pane.getSubViews().length is 0
+        meta.container.addSubView @[meta.name] = new meta.paneClass delegate: @
     
   notify: (title, duration = 2000, cssClass = "success", type = "mini") ->
     return unless title
